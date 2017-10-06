@@ -19,8 +19,7 @@ make sure chart.html exists in the same directory as this file. After
 Next, in the directory where this file is located,
 Finally, go to the address http:doubleforwardslash/localhost:8888/chart.html
 """
-print(os.getcwd())
-os.chdir('C:/Users/Timor/Documents/Python Scripts/twitter mining/')
+
 
 def tokenize(s):
     # Tokenize tweets. Code taken from https://marcobonzanini.com/2015/03/09/mining-twitter-data-with-python-part-2/
