@@ -4,7 +4,9 @@ from nltk.tokenize import word_tokenize
 import re
 import operator
 from collections import Counter
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords 
+# if cannot find package: import nltk
+# nltk.download('stopwords')
 import string
 import os
 import vincent
@@ -21,14 +23,16 @@ Finally, go to the address http:doubleforwardslash/localhost:8888/chart.html
 """
 
 
-def tokenize(s):
+def tokenize(tweet):
     # Tokenize tweets. Code taken from https://marcobonzanini.com/2015/03/09/mining-twitter-data-with-python-part-2/
-    return tokens_re.findall(s)
+    return tokens_re.findall(tweet) # .findall() is a re method
 
-def preprocess(s, lowercase=False):
-    tokens = tokenize(s)
+def preprocess(tweet, lowercase=False):
+    tokens = tokenize(tweet)
+   
     if lowercase:
         tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
+   # print(tokens) #Here we don't have the unicode problem
     return tokens
 
 # Break each tweet down into "tokens", i.e., words, symbols, or bits of meaning,
@@ -43,23 +47,18 @@ def read_tweets():
         punctuation = list(string.punctuation)
         stop = stopwords.words('english') + punctuation + ['RT', 'via']
 
-        #regex to remove unicode
-
         text = [preprocess(tweet[term]['text']) for term in range(len(tweet))]
         # Turn into one list:
         text = sum(text, [])
-        # for term in text: figurin out unicode...
-        #     print(re.sub(r'[^\x00-\x7F]+’,”,term))
-
         # Remove all the pesky symbols and words
         tweet_content = [term for term in text
                         if term not in stop and
                         not term.startswith(('#', '@'))]
-        # Unicode removal:
-        # revised_tweet_content = []
-        # for term in tweet_content:
-        #     revised_tweet_content.append(term.encode('ascii', 'ignore'))
-        # print(revised_tweet_content)
+        #print(tweet_content) 
+        #for term in tweet_content:
+        #    print(excess_symbols.search(term)) 
+        tweet_content = [term for term in tweet_content if excess_symbols.search(term) == None] # Remove stuff from terms  
+        # tweet_content = [x.encode('utf-8') for x in tweet_content]  
         hashtags = [term for term in text if term.startswith('#')]
         return(tweet_content, hashtags)
 
@@ -89,8 +88,8 @@ def visualize(common_word):
     bar.axes[0].properties = x_lab
     bar.to_json('term_freq.json')
 
-#  @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
-#The following code will propose a pre-processing chain that will consider
+# @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
+# The following code will propose a pre-processing chain that will consider
 # these aspects of the language.
 
 emoticons_str = r"""
@@ -106,22 +105,36 @@ regex_str = [
     r'(?:@[\w_]+)', # @-mentions
     r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
     r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-
     r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
     r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
     r'(?:[\w_]+)', # other words
     r'(?:\S)' # anything else
 ]
 
+regex_str_remove = [
+    r'<[^>]+>', # HTML tags 
+    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLsi
+    r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
+    r'(?:\S)'# anything else
+    r'[^\x00-\x7F]+' #Apparently this removes any non ascii characters. 
+    ]
+
 tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
+# Attempting to add things to regex_str_remove to see how it affects most common word output at end
+# However, it does not seem that anything is being removed. 
 
 tweets = read_tweets() # Tweets will be a tuple with 2 elements
 # Index 1 holds the words of the tweet; list 2 holds the hashtags
 common_words = word_frequency(tweets[0])
 # have yet to sort out the unicode
 common_hash = hashtag_frequency(tweets[1])
-visualize(common_hash)
+#visualize(common_hash)
+
+# look at current output. Then figure out which characters to remove; i.e., I want to remove certain unicode characters from the list. They were in unicode because I was using json dumps,
+# I had to on windows I thought. Apparently not on linux. 
+# question: utf-8, unicode, asc11 ensure ascii = F, .encode 
 
 # This function will open server and the requisite url to display the graph
 # Something like: https://stackoverflow.com/questions/4302027/how-to-open-a-url-in-python
