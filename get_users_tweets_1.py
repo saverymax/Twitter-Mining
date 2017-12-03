@@ -2,11 +2,14 @@ import tweepy
 from tweepy import OAuthHandler
 import json
 import sys
-
+import os
 """
 This program generates a json file that contains the specificed number of
-tweets from a specified user. To properly run the script,
-enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS 200
+tweets from a specified user.
+
+To properly run the script, enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS or @POTUS 200
+
+The purpose of this file is to dump all senators, or other group of users, tweets into one json. However, the format is incorrect. 
 """
 
 consumer_key = '7GSXtxZvVxgMqc7zQms88Rn1A'
@@ -27,10 +30,13 @@ def users_tweets(user,quantity):
     #make initial request for most recent tweets (200 is the maximum allowed count)
     for tweet in tweepy.Cursor(api.user_timeline, screen_name = user).items(int(quantity)):
             tweets.append(tweet._json)
-
-    # Save a file as .json, that will be processed later
-    with open('user_data.json', 'a') as outfile: # Save a file as .json, that will be processed later
-        json.dump(tweets, outfile) # .dump dumps into file. .dumps turns dict into str data structure
+    
+    path = '/home/timor/Documents/Git/Twitter-Mining/twitter_data' # Path has to be complete
+    os.chdir(path)
+     
+    # Save a file as .json, that will be processed later. 'a' will add to file, w+ will write over existing file, if I want to update. 
+    with open('twitter_data.json', 'a') as outfile: 
+         json.dump(tweets, outfile) 
 
 if __name__ == '__main__':
 
@@ -39,11 +45,6 @@ if __name__ == '__main__':
         users_tweets(sys.argv[1],sys.argv[2]) # Element one is the file
     else:
         print("Error: enter one username followed by the number of tweets to grab")
+# Add try except to above code
 
-    #alternative method: loop through multiple users
-	# users = ['user1','user2']
-
-	# for user in users:
-	# 	get_tweets(user)
-#used https://github.com/gitlaura/get_tweets/blob/master/get_tweets.py
-#for creating script
+# Used https://github.com/gitlaura/get_tweets/blob/master/get_tweets.py to create script
