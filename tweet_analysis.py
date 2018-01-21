@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 """
-This file will read a json file, titled @user_twitter_data.jason, that contains twitter data from a user specified in the twitter_json_file_creator.py script, tokenize and filter the tweet, and plot the word and hashtag usage.
+This file will read a json file, titled @user_twitter_data.jason, that contains twitter data from a user specified in the twitter_json_file_creator.py script, tokenize and filter the tweet, and plot the word and hashtag usage. It will not read a jsonlines file, or any json file composed of tweets from multiple users.
 
 @user or just user is required as input, as the json file will be named respectively. 
             

@@ -5,11 +5,11 @@ import sys
 import os
 """
 This program generates a json file that contains the specificed number of
-tweets from a specified user.
+tweets from a specified user, or the concatenated dictionary of tweets from multiple users (if called by get_tweets.sh).
 
 To properly run the script, enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS or @POTUS 200
 
-The purpose of this file is to dump all senators, or other group of users, tweets into one json. However, the format is incorrect. 
+This file is called by get_tweets.sh. However, it can also be run independently in the command line. However, there is currently no way to set the 
 """
 
 consumer_key = '7GSXtxZvVxgMqc7zQms88Rn1A'

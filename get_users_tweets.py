@@ -5,7 +5,7 @@ import sys
 import os
 """
 This program generates a json file that contains the specificed number of
-tweets from a specified user.
+tweets from a specified user. If called by get_tweets.sh, the program will generate .json files for each user run through get_tweets.sh. .json files will be named according to user. 
 
 To properly run the script, enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS 200 or @POTUS 200
 

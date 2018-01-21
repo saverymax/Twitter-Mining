@@ -10,8 +10,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-"""This file will read the json file stream_"the searched twitter terms".jsonl  as created by twitter_stream.py
-
+"""This file will read the json file twitter_data.jsonl as created by get_users_tweets_jsonl.py
+It is called by get_tweets.sh after the tweets of all senators have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
 A plot of most common terms will be generated.
 """
 
@@ -30,7 +30,7 @@ def read_tweets():
     os.chdir(path)
 
     punctuation = list(string.punctuation)
-    stop = stopwords.words('english') + punctuation + ['RT','via','amp', '...']
+    stop = stopwords.words('english') + punctuation + ['RT','via','amp', '...','.',"'"]
     
     terms_in_tweets = []
 
@@ -39,15 +39,11 @@ def read_tweets():
             tweet = json.loads(line)
             terms_in_tweets.append(preprocess(tweet['text']))
 
-    terms_in_tweets = sum(terms_in_tweets, [])
-    
-    for term in terms_in_tweets:
-        if not term.startswith('#'):
-            print('F')
-
-    tweet_content = [term for term in terms_in_tweets
-                    if term not in stop and not term.startswith(('#', '@'))]
+    terms_in_tweets = sum(terms_in_tweets, []) 
    
+    tweet_content = [term for term in terms_in_tweets
+                    if term not in stop and not term.startswith(('#', '@','...','.',"'"))]
+  # gotta remove all whitespace!!! and fucking apostrophes 
     hashtags = [term for term in terms_in_tweets if term.startswith('#')]
     
     return(tweet_content, hashtags)

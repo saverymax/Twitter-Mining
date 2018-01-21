@@ -1,0 +1,10 @@
+The following are my personal notes as I work on the project.
+
+Current Work
+upload online
+    
+Future plans:
+automatically update graphs on wordpress. ask justin. 
+graph of @mentions maybe
+see bar graph of word usage week by week
+and mood changes
