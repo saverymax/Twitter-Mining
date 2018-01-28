@@ -12,6 +12,9 @@ import numpy as np
 
 """This file will read the json file twitter_data.jsonl as created by get_users_tweets_jsonl.py
 It is called by get_tweets.sh after the tweets of all senators have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
+
+It is also used to analyze streaming data.
+
 A plot of most common terms will be generated.
 """
 
