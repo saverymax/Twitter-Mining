@@ -9,7 +9,7 @@ tweets from a specified user, or the concatenated dictionary of tweets from mult
 
 To properly run the script, enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS or @POTUS 200
 
-This file is called by get_tweets.sh. However, it can also be run independently in the command line. However, there is currently no way to set the 
+This file is called by get_tweets.sh. However, it can also be run independently in the command line. However, there is currently no way to call from the command line the user/s of interest 
 """
 
 consumer_key = '7GSXtxZvVxgMqc7zQms88Rn1A'

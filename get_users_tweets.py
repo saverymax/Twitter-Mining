@@ -9,7 +9,6 @@ tweets from a specified user. If called by get_tweets.sh, the program will gener
 
 To properly run the script, enter python user_tweet.py screen name for twitter user; number of tweets to grab e.g., POTUS 200 or @POTUS 200
 
-Currently, this file is called by get_tweets.sh
 """
 
 consumer_key = '7GSXtxZvVxgMqc7zQms88Rn1A'

@@ -1,8 +1,10 @@
 The following are my personal notes as I work on the project.
 
 Current Work
-upload online
+upload to github website
+save figures with correct axes
     
+
 Future plans:
 automatically update graphs on wordpress. ask justin. 
 graph of @mentions maybe
