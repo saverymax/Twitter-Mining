@@ -18,7 +18,7 @@ This file will read a json file, titled @user_twitter_data.jason, that contains 
 @user or just user is required as input, as the json file will be named respectively. 
 
 The file is useful in that it is able to analyze data from user given in command line.
-            
+Its function should be applied to twitter_analysis_stream            
 """
 
 

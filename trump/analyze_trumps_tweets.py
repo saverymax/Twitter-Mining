@@ -74,7 +74,7 @@ def hashtag_frequency(hashtags):
 def visualize(common_word):
     # https://plot.ly/matplotlib/bar-charts/ as reference
     # Sign in to plotly
-    py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')
+    #py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')
     labels, freq = zip(*common_word)
     indexes = np.arange(len(labels))
     width = .7 
@@ -85,7 +85,9 @@ def visualize(common_word):
     axis.set_xlabel('Terms used')
     axis.set_ylabel('Frequency of terms')
     axis.set_title('Term usage of Twitter Users')
+    tweet_figure.savefig('trumps_tweets.jpg') # not saving correctly
     plt.show() 
+    plt.close()
     # for online plotting:
     #plotly_fig = tls.mpl_to_plotly(tweet_figure)
     #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")    
