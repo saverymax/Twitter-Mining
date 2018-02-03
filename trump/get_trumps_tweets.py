@@ -3,6 +3,7 @@ from tweepy import OAuthHandler
 import json
 import sys
 import os
+import config
 """
 This program generates a jsonl file that contains the specificed number of
 tweets from trump.
@@ -12,13 +13,8 @@ To properly run the script, enter python get_trumps_tweets and the number of twe
 This file is called by get_tweets.sh. However, it can also be run independently in the command line.
 """
 
-consumer_key = '7GSXtxZvVxgMqc7zQms88Rn1A'
-consumer_secret = 'DmiMJPPFbzPc0fTykPl97JIL4J0DeU69hfXrzPvw1vu2xAoYZL'
-access_token = '564338092-dOtS6UWrFzLS3WDbA3YuqaEeYKMnCnMCA6kH3dPH'
-access_secret = 'gOPv6wJ2xXwJBP4jU6vFpQ99Iyla5rZkLbGzYH29NAS5C'
-
-auth = OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
+auth = OAuthHandler(config.consumer_key, config.consumer_secret)
+auth.set_access_token(config.access_token, config.access_secret)
 
 api = tweepy.API(auth)
 # Download users tweets
