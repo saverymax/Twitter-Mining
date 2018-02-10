@@ -1,7 +1,12 @@
 The following are my personal notes as I work on the project.
 
 Current Work
-upload to github website
+https://dev.to/rodolfoferro/sentiment-analysis-on-trumpss-tweets-using-python-
+from above link, create time series.
+machine learning 
+
+make more modular
+upload to github website. figure out how to use docs folder or the ghpages branch which is what I thnk ill do. how do I load graphs up in there?
 save figures with correct axes
     
 
