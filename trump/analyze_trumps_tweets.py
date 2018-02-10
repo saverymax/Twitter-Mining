@@ -2,6 +2,7 @@ import tweepy
 import sys
 import json
 import re
+import pandas as pd
 import operator
 from collections import Counter
 from nltk.corpus import stopwords
@@ -19,6 +20,8 @@ A plot of most common terms will be generated.
 """
 
 def tokenize(tweet):
+    """Turn each word/symbol in the text of the tweet into a token."""
+
     # The .findall method is a part of the re library. 
     return tokens_re.findall(tweet)
 
@@ -29,6 +32,8 @@ def preprocess(tweet, lowercase = False):
     return tokens
 
 def read_tweets():
+    """Read tweets saved in the jsonl file and process the text."""
+    
     path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
     os.chdir(path)
 
@@ -37,18 +42,33 @@ def read_tweets():
     
     # Create an array to hold the content of the tweets.  
     terms_in_tweets = []
+    tweet_list = []
+    tweet_date = []
+    tweet_likes = []
+    tweet_RT = []
     # Read and process tweets. See above functions
     with open('trumps_tweets.jsonl','r') as infile: 
         for line in infile:
             tweet = json.loads(line)
-            terms_in_tweets.append(preprocess(tweet['text']))
+            tweet_list.append(tweet['text'])
+            tweet_date.append(tweet['created_at'])
+            tweet_RT.append(tweet['retweet_count'])
+            tweet_likes.append(tweet['favorite_count'])
+            processed_tweet = preprocess(tweet['text'])
+            terms_in_tweets.append(processed_tweet)
+     
+    # More efficient to add lists to pandas data frame than to add one item at a time
+    tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
     
     # Concatenate everything into one array.
     terms_in_tweets = sum(terms_in_tweets, []) 
-   
+    
+    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv',sep='\t') 
+    
     # Sort the words used into hashtags and other content
     tweet_content = [term for term in terms_in_tweets
                     if term not in stop and not term.startswith(('#', '@'))]
+    
     hashtags = [term for term in terms_in_tweets if term.startswith('#')]
    
     # remove all non-alphanumeric content from the words:
@@ -96,6 +116,12 @@ def visualize(common_word):
 # The following code will propose a pre-processing chain that will consider
 # these aspects of the language.
 
+def time_series(tweet_dataframe):
+    """Using data from pandas dataframe, create a time series plot of retweets"""
+
+    retweets = pd.Series(data = tweet_dataframe['retweets'].values, index = tweet_dataframe['date'])
+    retweets.plot(figsize = (16,4), color = 'g')
+
 emoticons_str = r"""
     (?:
         [:=;] # Eyes
@@ -131,8 +157,8 @@ excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re
 
 tweets = read_tweets()# Lookup file
 # Index 1 holds the words of the tweet; index 2 holds the hashtags
-common_words = word_frequency(tweets[0])
-common_hash = hashtag_frequency(tweets[1])
+#common_words = word_frequency(tweets[0])
+#common_hash = hashtag_frequency(tweets[1])
 
-visualize(common_words)
-visualize(common_hash)
+#visualize(common_words)
+#visualize(common_hash)
