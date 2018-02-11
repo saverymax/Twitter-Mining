@@ -105,7 +105,7 @@ def visualize(common_word):
     axis.set_xlabel('Terms used')
     axis.set_ylabel('Frequency of terms')
     axis.set_title('Term usage of Twitter Users')
-    tweet_figure.savefig('trumps_tweets.jpg') # not saving correctly
+    tweet_figure.savefig('trumps_tweets.png') # not saving correctly
     plt.show() 
     plt.close()
     # for online plotting:
@@ -157,8 +157,8 @@ excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re
 
 tweets = read_tweets()# Lookup file
 # Index 1 holds the words of the tweet; index 2 holds the hashtags
-#common_words = word_frequency(tweets[0])
-#common_hash = hashtag_frequency(tweets[1])
+common_words = word_frequency(tweets[0])
+common_hash = hashtag_frequency(tweets[1])
 
-#visualize(common_words)
-#visualize(common_hash)
+visualize(common_words)
+visualize(common_hash)
