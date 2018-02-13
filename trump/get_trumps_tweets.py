@@ -5,7 +5,7 @@ import sys
 import os
 import config
 """
-This program generates a jsonl file that contains the specificed number of
+This program generates a jsonl file that contains the specified number of
 tweets from trump.
 
 To properly run the script, enter python get_trumps_tweets and the number of tweets to grab e.g., POTUS or @POTUS 200.
@@ -28,7 +28,7 @@ def users_tweets(user,quantity):
     # Save a file as .jsonl that will be processed later. 'a' will add to file, w+ will writ over existing file, if I want to update. 
     with open('trumps_tweets.jsonl', 'w') as outfile: 
     #make initial request for most recent tweets (200 is the maximum allowed count)
-        for tweet in tweepy.Cursor(api.user_timeline, screen_name = user).items(int(quantity)):    
+        for tweet in tweepy.Cursor(api.user_timeline, screen_name = user).items(int(quantity)): 
             outfile.write(json.dumps(tweet._json)+"\n") # This is a weird way to do this because it just prints out the json string and writes that to a file. As opposed to json.dump which will actually write to the file directly. Could also do json.dump(stuff) and then outfile.write("\n"). Not so great either.   
 
 if __name__ == '__main__':

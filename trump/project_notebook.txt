@@ -1,17 +1,22 @@
 The following are my personal notes as I work on the project.
 
 Current Work
+figure out how I want to do the sentiment analysis. how to use textblob
+
 https://dev.to/rodolfoferro/sentiment-analysis-on-trumpss-tweets-using-python-
-from above link, create time series.
-machine learning 
+
+why is there a single #? is that coming from the tokenizer or is it in the tweets?
+also, I have fewer hashtags than I used to. See saved hashtag png
 
 make more modular
-upload to github website. figure out how to use docs folder or the ghpages branch which is what I thnk ill do. how do I load graphs up in there?
-save figures with correct axes
-    
+
+upload to github website. figure out how to use docs folder or the ghpages branch which is what I
+
+train classifier    
+https://textblob.readthedocs.io/en/dev/classifiers.html
+
 
 Future plans:
 automatically update graphs on wordpress. ask justin. 
-graph of @mentions maybe
 see bar graph of word usage week by week
 and mood changes

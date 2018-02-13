@@ -22,32 +22,29 @@ A plot of most common terms will be generated.
 def tokenize(tweet):
     """Turn each word/symbol in the text of the tweet into a token."""
 
-    # The .findall method is a part of the re library. 
+    # The .findall method is a part of the re library.
     return tokens_re.findall(tweet)
 
 def preprocess(tweet, lowercase = False):
     tokens = tokenize(tweet)
     # Change all tokens to lowercase, unless token is an emoticon:
-    tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens] 
+    tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
 
 def read_tweets():
-    """Read tweets saved in the jsonl file and process the text."""
-    
+    """Read tweets saved in the jsonl file, preprocess the text, and save tweets in a csv and a list. These will be filtered and visualized later."""
+
     path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
     os.chdir(path)
 
-    punctuation = list(string.punctuation)
-    stop = stopwords.words('english') + punctuation + ['rt','via','amp','h']
-    
-    # Create an array to hold the content of the tweets.  
+        # Create an array to hold the content of the tweets.
     terms_in_tweets = []
     tweet_list = []
     tweet_date = []
     tweet_likes = []
     tweet_RT = []
     # Read and process tweets. See above functions
-    with open('trumps_tweets.jsonl','r') as infile: 
+    with open('trumps_tweets.jsonl','r') as infile:
         for line in infile:
             tweet = json.loads(line)
             tweet_list.append(tweet['text'])
@@ -56,71 +53,89 @@ def read_tweets():
             tweet_likes.append(tweet['favorite_count'])
             processed_tweet = preprocess(tweet['text'])
             terms_in_tweets.append(processed_tweet)
-     
-    # More efficient to add lists to pandas data frame than to add one item at a time
+
+     # Concatenate everything into one array, for filtering and visualization later
+    terms_in_tweets = sum(terms_in_tweets, [])
+
+    # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-    
-    # Concatenate everything into one array.
-    terms_in_tweets = sum(terms_in_tweets, []) 
-    
-    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv',sep='\t') 
-    
-    # Sort the words used into hashtags and other content
+    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv',sep='\t')
+
+    return(terms_in_tweets, tweet_dataframe)
+
+def process_tweets(terms_in_tweets):
+    """Remove from the list containing all tweet text the tokens and symbols that interfere with analysis."""
+
+    punctuation = list(string.punctuation)
+    stop = stopwords.words('english') + punctuation + ['rt','via','amp','h']
+
     tweet_content = [term for term in terms_in_tweets
                     if term not in stop and not term.startswith(('#', '@'))]
-    
+
     hashtags = [term for term in terms_in_tweets if term.startswith('#')]
-   
+
     # remove all non-alphanumeric content from the words:
-    tweet_content = [text for text in tweet_content if not excess_symbols.search(text)] 
+    tweet_content = [text for text in tweet_content if not excess_symbols.search(text)]
+
     return(tweet_content, hashtags)
 
-def word_frequency(tweets):
-    count_all = Counter()
-    # Update the counter
-    count_all.update(tweets)
-    # Print the first 5 most frequent words
-    print(count_all.most_common(5)) # weird I still have to use json.dumps
-    common_words = count_all.most_common(20)
-    return(common_words)
+class visualize():
+    """Initiate instance of twitter data."""
 
-def hashtag_frequency(hashtags):
-    count_all = Counter()
-    count_all.update(hashtags)
-    print(json.dumps(count_all.most_common(5))) # For reference in command line
-    common_hash = count_all.most_common(20)
-    return(common_hash)
+    def __init__(self, terms, name):
+        """Initiate the instance"""
 
-def visualize(common_word):
-    # https://plot.ly/matplotlib/bar-charts/ as reference
-    # Sign in to plotly
-    #py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')
-    labels, freq = zip(*common_word)
-    indexes = np.arange(len(labels))
-    width = .7 
-    tweet_figure, axis = plt.subplots()
-    axis.bar(indexes, freq, width, align = 'center')
-    axis.set_xticks(indexes) 
-    axis.set_xticklabels(((labels)) , rotation = 55)
-    axis.set_xlabel('Terms used')
-    axis.set_ylabel('Frequency of terms')
-    axis.set_title('Term usage of Twitter Users')
-    tweet_figure.savefig('trumps_tweets.png') # not saving correctly
-    plt.show() 
-    plt.close()
-    # for online plotting:
-    #plotly_fig = tls.mpl_to_plotly(tweet_figure)
-    #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")    
+        self.terms = terms
+        self.name = name
 
-# @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
-# The following code will propose a pre-processing chain that will consider
-# these aspects of the language.
+    def word_frequency(self):
+        """Return the most frequent terms"""
+
+        count_all = Counter()
+        # Update the counter
+        count_all.update(self.terms)
+        # Print the first 5 most frequent words
+        print(count_all.most_common(5))
+        common_terms = count_all.most_common(20)
+        return(common_terms)
+
+    def visualize_term_usage(self):
+        """Produce histogram of most frequent terms.
+        Calls method word_frequency to do so.
+        Could potentially be used to plot online with plotly.
+        """
+
+        # https://plot.ly/matplotlib/bar-charts/ as reference
+        # Sign in to plotly
+        #py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')i
+        common_terms = self.word_frequency()
+        labels, freq = zip(*common_terms)
+        indexes = np.arange(len(labels))
+        width = .7
+        tweet_figure, axis = plt.subplots(figsize=(17, 10)) # figsize allows me to save with compatible proportions
+        axis.bar(indexes, freq, width, align = 'center')
+        axis.set_xticks(indexes)
+        axis.set_xticklabels(((labels)) , rotation = 55)
+        axis.set_xlabel('Terms used')
+        axis.set_ylabel('Frequency of terms')
+        axis.set_title('Term usage of Trump')
+        tweet_figure.savefig('{0}.png'.format(self.name), bbox_inches = 'tight') # not saving correctly
+        plt.show()
+        plt.close()
+        # for online plotting:
+        #plotly_fig = tls.mpl_to_plotly(tweet_figure)
+        #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
 
 def time_series(tweet_dataframe):
     """Using data from pandas dataframe, create a time series plot of retweets"""
-
     retweets = pd.Series(data = tweet_dataframe['retweets'].values, index = tweet_dataframe['date'])
+    hearts = pd.Series(data=tweet_dataframe['likes'].values, index=tweet_dataframe['date'])
     retweets.plot(figsize = (16,4), color = 'g')
+    hearts.plot(figsize = (16,4), color = 'r')
+
+    # @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
+# The following code will propose a pre-processing chain that will consider
+# these aspects of the language.
 
 emoticons_str = r"""
     (?:
@@ -150,15 +165,20 @@ regex_str_remove = [
     #https://stackoverflow.com/questions/1219915/regex-to-remove-apostrophe
     ]
 
+#if __name__ == '__main__':
+
+"""Regular expression variables"""
 tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
 excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
 
-
+"""Initiate data processing and visualization"""
 tweets = read_tweets()# Lookup file
-# Index 1 holds the words of the tweet; index 2 holds the hashtags
-common_words = word_frequency(tweets[0])
-common_hash = hashtag_frequency(tweets[1])
+# Index 0 holds the words of the tweet; index 1 holds the dataframe.
+processed_tweets = process_tweets(tweets[0])
 
-visualize(common_words)
-visualize(common_hash)
+common_words = visualize(processed_tweets[0], "terms")
+common_words.visualize_term_usage()
+common_hash = visualize(processed_tweets[1], "hashtags")
+common_hash.visualize_term_usage()
+time_series(tweets[1])
