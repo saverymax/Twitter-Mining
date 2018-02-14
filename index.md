@@ -1,6 +1,6 @@
 Documenting and visualizing tweets 
 
-![Trumps most commonly used words in his 500 most recent tweets](/home/timor/Documents/Git/Twitter-Mining/figures/terms.png)
+![Trumps most commonly used words in his 500 most recent tweets](https://github.com/saverymax/Twitter-Mining/blob/gh-pages/figures/hashtags.png)
 
 ![Trumps most commonly used hashtags in his 500 most recent tweets](/home/timor/Documents/Git/Twitter-Mining/figures/hashtags.png)
 
