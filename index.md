@@ -8,6 +8,5 @@ The above and below bar graphs are... unsurprising
 
 Current projects: Sentiment analysis of streaming tweet data, and archived tweets of political figures
 
-![Trumps most commonly used words in his 500 most recent tweets](https://github.com/saverymax/Twitter-Mining/blob/gh-pages/figures/terms.png)
 
 
