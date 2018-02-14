@@ -1,4 +1,6 @@
-## Documenting and visualizing tweets 
+## Visualizing tweets 
+
+This project site documents my work using twitter--and in the future other social media platforms--to explore the thoughts, beliefs, feelings, and actions of the people that compose social networks. As of 2-14-2018, I'm just getting started putting together the project site and building the workflows necessary for large-scale analyses.
 
 Trumps most commonly used words in his 500 most recent tweets
 ![Trumps most commonly used words in his 500 most recent tweets](/figures/terms.png)
