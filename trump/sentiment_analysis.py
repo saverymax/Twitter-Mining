@@ -1,20 +1,47 @@
+#!/usr/bin/env python3
 from textblob import TextBlob
 import re
-
+import string
+import pandas as pd
+import os
 class process_tweet():
     """Clean tweet and analyze text"""
 
-    def __init__(self):
+    def __init__(self, tweet_dataframe):
         """initiate instance of tweet text to be analyzed""" 
-        pass
+         
+        self.tweet_dataframe = tweet_dataframe
 
-    def filter_tweet(self, tweet_dataframe)
-        for row in tweet_dataframe:
-            #clean tweet
+    def filter_tweet(self):
+        """Remove chosen elements from tweets. Depending on hardcoded values, this might be hashtags, @mentions, urls, or all non-alphanumeric characters."""
+        # need to change all cases
+        excess_symbols = '[^\w ]+'
+        #hashtags = r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)" # hash-tags
+        #at_mentions = r'(?:@[\w_]+)' # @-mentions. My decision is to leave these in the tweets and just remove the # and @
+        tweet_urls = r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+' # URLs
+        #patterns = re.compile('('+hashtags+'|'+at_mentions+'|'+tweet_urls+'|'+excess_symbols+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
+        patterns = re.compile('('+tweet_urls+'|'+excess_symbols+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
+        #for index, tweet in tweet_dataframe.iterrows():
+        # turn into list comp
+        self.tweet_dataframe['filtered_text'] = [patterns.sub('', tweet['text']) for index, tweet in self.tweet_dataframe.iterrows()]  #clean tweet
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets_filtered.tsv',sep='\t')
+    
+    def process_sentiment(self):
+        """Analyze sentiment with Textblob library. Dataframe must be filtered before this method is called."""
 
-    def process_sentiment(self, tweet_dataframe):
-        for tweet in tweet_dataframe:
-            analysis = TextBlow(tweet)
-            #analyze sentiment
+        self.tweet_dataframe['sentiment'] = [TextBlob(tweet['filtered_text']).sentiment for index, tweet in self.tweet_dataframe.iterrows()]  #clean tweet
+             
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets_filtered.tsv',sep='\t')
+    
+   
 
-data['SA'] = np.array([ analize_sentiment(tweet) for tweet in data['Tweets'] ])
+path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
+os.chdir(path)
+tweet_dataframe = pd.read_csv('converted_tweets.tsv', sep='\t')
+#data['SA'] = np.array([ analize_sentiment(tweet) for tweet in dataframe['Tweets'] ])
+
+#print(tweet_dataframe['text'].head)
+trumps_analysis = process_tweet(tweet_dataframe)
+     
+trumps_analysis.filter_tweet()
+trumps_analysis.process_sentiment()

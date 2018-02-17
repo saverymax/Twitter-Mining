@@ -64,7 +64,7 @@ def read_tweets():
     return(terms_in_tweets, tweet_dataframe)
 
 def process_tweets(terms_in_tweets):
-    """Remove from the list containing all tweet text the tokens and symbols that interfere with analysis."""
+    """Remove the text, tokens and symbols that interfere with analysis."""
 
     punctuation = list(string.punctuation)
     stop = stopwords.words('english') + punctuation + ['rt','via','amp','h']
@@ -105,9 +105,9 @@ class visualize():
         Could potentially be used to plot online with plotly.
         """
 
-        # https://plot.ly/matplotlib/bar-charts/ as reference
+        #https://plot.ly/matplotlib/bar-charts/ as reference
         # Sign in to plotly
-        #py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')i
+        py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')
         common_terms = self.word_frequency()
         labels, freq = zip(*common_terms)
         indexes = np.arange(len(labels))
@@ -123,8 +123,8 @@ class visualize():
         plt.show()
         plt.close()
         # for online plotting:
-        #plotly_fig = tls.mpl_to_plotly(tweet_figure)
-        #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
+        plotly_fig = tls.mpl_to_plotly(tweet_figure)
+        url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
 
 def time_series(tweet_dataframe):
     """Using data from pandas dataframe, create a time series plot of retweets"""
@@ -157,9 +157,6 @@ regex_str = [
 ]
 
 regex_str_remove = [
-    #r'<[^>]+>', # HTML tags
-    #r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-    #r'(?:(?:\d+,?)+(?:\.?\d+)?)',# numbers
     #r'[^\x00-\x7F]+' # Apparently this removes any non ascii characters.
     r'[^\w ]' # removes all non alphanumeric stuffs (except spaces). [^\w #/] will leave or other special cases
     #https://stackoverflow.com/questions/1219915/regex-to-remove-apostrophe
