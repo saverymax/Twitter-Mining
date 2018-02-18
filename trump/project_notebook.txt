@@ -4,24 +4,24 @@ Current Work
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
 https://www.twilio.com/blog/2017/09/sentiment-analysis-python-messy-data-nltk.html
+https://www.twilio.com/blog/2017/12/sentiment-analysis-scikit-learn.html
+https://marcobonzanini.com/2015/01/19/sentiment-analysis-with-python-and-scikit-learn/
+https://gist.github.com/bonzanini/c9248a239bbab0e0d42e
+https://medium.com/tensorist/classifying-yelp-reviews-using-nltk-and-scikit-learn-c58e71e962d9
+
 train based on angry, arrogant, nostalgic, exaggerating? 
 
+time series with matplotlib or seaborn to save. also good time series in bonzaninis book
 why is there a single #? is that coming from the tokenizer or is it in the tweets?
 also, I have fewer hashtags than I used to. See saved hashtag png. 
 try using regex for hashtags. see regex in code
 
-make more modular
-
-upload to github website. figure out how to use docs folder or the ghpages branch which is what I
-
-train classifier    
-https://textblob.readthedocs.io/en/dev/classifiers.html
-
+make more oop
 
 Future plans:
-automatically update graphs on wordpress. ask justin. 
-see bar graph of word usage week by week
-and mood changes
+see bar graph of word usage week by week...and mood changes
+
+tech notes:
 
 installed textblob for sentiment analysis
 pip install -U textblob
