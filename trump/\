@@ -1,0 +1,20 @@
+import pd
+
+
+def time_series(tweet_dataframe):
+    """Using data from pandas dataframe, create a time series plot of retweets"""
+   
+    print(tweet_dataframe['likes'])
+    tweet_dataframe['date_array'] = np.array(tweet_dataframe['date']) 
+    tweet_dataframe['RTs'] = np.array(tweet_dataframe['retweets'])
+    retweets = pd.Series(data = tweet_dataframe['RTs'], index = tweet_dataframe['date_array'])
+    #hearts = pd.Series(data=tweet_dataframe['likes'].values, index=tweet_dataframe['date'])
+    retweets.plot(figsize = (16,4), color = 'g')
+    hearts.plot(figsize = (16,4), color = 'r')
+    # seaborn implementation
+    retweet_plot = sns.tsplot(time = tweet_dataframe['date'], value = tweet_dataframe['retweets'], data = tweet_dataframe)
+
+    
+    with open(pd.read_csv(~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv, sep = '\t') as tweet_file:
+        print(type(tweet_file))
+        print(tweet_file['text'].head()

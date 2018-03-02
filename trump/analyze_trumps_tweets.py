@@ -13,9 +13,14 @@ import numpy as np
 import plotly.plotly as py
 import plotly.tools as tls
 import plotly.graph_objs as go
+import seaborn as sns
+import plotly_credentials
 
-"""This file will read the json file twitter_data.jsonl as created by get_users_tweets_jsonl.py
-It is called by get_tweets.sh after the tweets of all senators have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
+"""
+This file will read the json file twitter_data.jsonl as created by get_trumps_tweets.py
+
+It is called by get_tweets.sh after the tweets have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
+
 A plot of most common terms will be generated.
 """
 
@@ -54,14 +59,14 @@ def read_tweets():
             processed_tweet = preprocess(tweet['text'])
             terms_in_tweets.append(processed_tweet)
 
-     # Concatenate everything into one array, for filtering and visualization later
+     # Concatenate everything into one array, for filtering and basic visualization
     terms_in_tweets = sum(terms_in_tweets, [])
 
     # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
     tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv',sep='\t')
 
-    return(terms_in_tweets, tweet_dataframe)
+    return(terms_in_tweets)
 
 def process_tweets(terms_in_tweets):
     """Remove the text, tokens and symbols that interfere with analysis."""
@@ -107,7 +112,7 @@ class visualize():
 
         #https://plot.ly/matplotlib/bar-charts/ as reference
         # Sign in to plotly
-        py.sign_in('savery_max', 'GZgmuV5Y6ERRSdx2wG8B')
+        py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
         common_terms = self.word_frequency()
         labels, freq = zip(*common_terms)
         indexes = np.arange(len(labels))
@@ -122,18 +127,12 @@ class visualize():
         tweet_figure.savefig('{0}.png'.format(self.name), bbox_inches = 'tight') # not saving correctly
         plt.show()
         plt.close()
+        
         # for online plotting:
-        plotly_fig = tls.mpl_to_plotly(tweet_figure)
-        url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
+        #plotly_fig = tls.mpl_to_plotly(tweet_figure)
+        #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
 
-def time_series(tweet_dataframe):
-    """Using data from pandas dataframe, create a time series plot of retweets"""
-    retweets = pd.Series(data = tweet_dataframe['retweets'].values, index = tweet_dataframe['date'])
-    hearts = pd.Series(data=tweet_dataframe['likes'].values, index=tweet_dataframe['date'])
-    retweets.plot(figsize = (16,4), color = 'g')
-    hearts.plot(figsize = (16,4), color = 'r')
-
-    # @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
+# @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
 # The following code will propose a pre-processing chain that will consider
 # these aspects of the language.
 
@@ -164,18 +163,17 @@ regex_str_remove = [
 
 #if __name__ == '__main__':
 
-"""Regular expression variables"""
+#Regular expression variables
 tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
 excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
 
-"""Initiate data processing and visualization"""
+#Initiate data processing and visualization
 tweets = read_tweets()# Lookup file
 # Index 0 holds the words of the tweet; index 1 holds the dataframe.
-processed_tweets = process_tweets(tweets[0])
+processed_tweets = process_tweets(tweets)
 
 common_words = visualize(processed_tweets[0], "terms")
-common_words.visualize_term_usage()
+#common_words.visualize_term_usage()
 common_hash = visualize(processed_tweets[1], "hashtags")
 common_hash.visualize_term_usage()
-time_series(tweets[1])

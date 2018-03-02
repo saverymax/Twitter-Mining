@@ -52,4 +52,5 @@ tfav = pd.Series(data=data['Likes'].values, index=data['Date'])
 tret = pd.Series(data=data['RTs'].values, index=data['Date'])
 
 tret.plot(figsize=(16,4), color='r')
+plt.show()
 
