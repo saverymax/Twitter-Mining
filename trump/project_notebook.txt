@@ -1,6 +1,10 @@
 The following are my personal notes as I work on the project.
 
 Current Work
+
+dates are backwards and weird in time series. fine when I use converted_csv, not when I use converted_csv_sentiment
+normalize likes, retweets, and sentiment so I can plot on one plot
+
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
 https://www.twilio.com/blog/2017/09/sentiment-analysis-python-messy-data-nltk.html
@@ -11,7 +15,6 @@ https://medium.com/tensorist/classifying-yelp-reviews-using-nltk-and-scikit-lear
 
 train based on angry, arrogant, nostalgic, exaggerating? 
 
-time series with matplotlib or seaborn to save. also good time series in bonzaninis book
 why is there a single #? is that coming from the tokenizer or is it in the tweets?
 also, I have fewer hashtags than I used to. See saved hashtag png. 
 try using regex for hashtags. see regex in code
