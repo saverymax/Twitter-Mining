@@ -174,6 +174,6 @@ tweets = read_tweets()# Lookup file
 processed_tweets = process_tweets(tweets)
 
 common_words = visualize(processed_tweets[0], "terms")
-#common_words.visualize_term_usage()
+common_words.visualize_term_usage()
 common_hash = visualize(processed_tweets[1], "hashtags")
 common_hash.visualize_term_usage()
