@@ -19,9 +19,9 @@ import plotly_credentials
 """
 This file will read the json file twitter_data.jsonl as created by get_trumps_tweets.py
 
-It is called by get_tweets.sh after the tweets have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
+It is called by tweet_workflow.sh after the tweets have been aggregated. It could also be called from the command line to visualize tweets in the file trumps_tweets.jsonl.
 
-A plot of most common terms will be generated.
+A plot of most common terms and hashtags will be generated. Additionally, a tsv will be created with all tweets and relevant information. This tsv will be used for sentiment analysis and time series plotting.
 """
 
 def tokenize(tweet):
