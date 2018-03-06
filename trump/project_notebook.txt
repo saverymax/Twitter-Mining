@@ -22,7 +22,14 @@ try using regex for hashtags. see regex in code
 make more oop
 
 Future plans:
-see bar graph of word usage week by week...and mood changes
+word usage in a time series...and mood changes
+want a time series that I can interact with and move my mouse to a sweet, to see how many views it got and such
+
+good stuff in R:
+https://www.tidytextmining.com/nasa.html
+
+compare word usage between people:
+https://www.tidytextmining.com/nasa.html
 
 tech notes:
 
