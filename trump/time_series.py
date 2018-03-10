@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt 
 import os
 
@@ -19,6 +18,8 @@ def time_series(tweet_dataframe):
     time_series_figure.suptitle("Trumps 500 most recent tweets")
     axis1.set_title("likes and retweet frequency of Trump's tweets")
     axis1.plot(likes_series, color = "b", label = "likes")
+    # axis1.scatter(likes_series.index, likes_series) # plot tweets as scatter plots
+    # axis1.plot(tweet_dataframe['date'], tweet_dataframe['likes'].values) # another way to plot... and doesn't require me to make series
     axis1.plot(retweets_series, color = "y",label = "retweets")
     axis1.legend(prop = {'size': 20})
     axis2.set_title("sentiment of Trump's tweets")

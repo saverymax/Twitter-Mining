@@ -1,8 +1,17 @@
 The following are my personal notes as I work on the project.
 
 Current Work
+can get one interacting plot with two data sets.
+but want two subplots with two data sets.
+interacting subplots
+    https://plot.ly/python/text-and-annotations/ !!!
+    https://plot.ly/python/time-series/
+    https://plot.ly/python/line-and-scatter/
+and to make subplots:
+    https://plot.ly/python/subplots/
 
-dates are backwards and weird in time series. fine when I use converted_csv, not when I use converted_csv_sentiment
+
+why are tweets cut off in tsv??? character limit???
 normalize likes, retweets, and sentiment so I can plot on one plot
 
 figure out how I want to do the sentiment analysis
@@ -19,13 +28,10 @@ why is there a single #? is that coming from the tokenizer or is it in the tweet
 also, I have fewer hashtags than I used to. See saved hashtag png. 
 try using regex for hashtags. see regex in code
 
-make more oop
-
 Future plans:
 word usage in a time series...and mood changes
-want a time series that I can interact with and move my mouse to a sweet, to see how many views it got and such
 
-good stuff in R:
+good stuff in R, like topic modeling
 https://www.tidytextmining.com/nasa.html
 
 compare word usage between people:
