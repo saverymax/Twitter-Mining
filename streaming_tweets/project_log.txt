@@ -1,11 +1,21 @@
 Current work: 
-trying to get timing to work so I can uh stop it
+
+overwriting listener class:
+use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
+http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streaming-api/
+
+
+the way I dump tweets does not dump tweet by tweet. need to dump status by status. 
 plot streaming data
-search for multiple terms
-from trump analysis, add in graphing features and text filtering
+add in graphing features and text filtering
+name the file as .join(termlist)
+
 
 future:
 sentiment analysis
-add the command line utility (fine naming) to other files in twitter-mining directory
+add the command line utility to other files in twitter-mining directory
+use methods in tweepy docs https://github.com/tweepy/tweepy/blob/master/tweepy/streaming.py to set time limit and disconnect.   
+
+
 
 

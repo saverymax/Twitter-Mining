@@ -29,7 +29,7 @@ def preprocess(tweet, lowercase = False):
 
 def read_tweets():
 
-    path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/streaming_data'
+    path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data'
     os.chdir(path)
 
     punctuation = list(string.punctuation)
@@ -37,7 +37,7 @@ def read_tweets():
     
     terms_in_tweets = []
 
-    with open('twitter_data.jsonl','r') as infile: 
+    with open('filename.jsonl','r') as infile: 
         for line in infile:
             tweet = json.loads(line)
             terms_in_tweets.append(preprocess(tweet['text']))
