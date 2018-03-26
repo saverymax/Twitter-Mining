@@ -1,15 +1,12 @@
 Current work: 
 
-overwriting listener class:
-use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
-http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streaming-api/
+analysis working, go to next step
+but what's with the limit in the twitter.py file. Check tweepy source
+    it's a limit notice. Given by twitter when I have reached limit. How should I deal with it?
 
-
-the way I dump tweets does not dump tweet by tweet. need to dump status by status. 
-plot streaming data
+plot time_series streaming data
 add in graphing features and text filtering
-name the file as .join(termlist)
-
+networks! see refs in trump dir. Some possibilities for R. 
 
 future:
 sentiment analysis
@@ -17,5 +14,12 @@ add the command line utility to other files in twitter-mining directory
 use methods in tweepy docs https://github.com/tweepy/tweepy/blob/master/tweepy/streaming.py to set time limit and disconnect.   
 
 
+refs:
+overwriting listener class:
+use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
+http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streaming-api/
+
+twitter time out:
+https://developer.twitter.com/en/docs/basics/rate-limiting
 
 

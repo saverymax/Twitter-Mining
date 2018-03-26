@@ -42,9 +42,11 @@ class MyListener(StreamListener):
         self.outfile = "%s/stream_%s.json" % (data_dir, query_fname)
 
     def on_data(self, data):
+        print("on_data function")
         while (time.time() - self.time) < self.limit:
             try:
                 with open(self.outfile, 'a') as file:
+                    print(type(data))
                     file.write(data)
                     #print(data)
                     return True
@@ -82,7 +84,7 @@ def convert_valid(one_char):
         return '_'
 
 @classmethod
-def parse(cls, api, raw):
+def parse(cls, api, raw): # parse is called in on_data in tweepy docs: https://github.com/tweepy/tweepy/blob/master/tweepy/streaming.py
     status = cls.first_parse(api, raw)
     setattr(status, 'json', json.dumps(raw))
     return status
@@ -95,6 +97,6 @@ if __name__ == '__main__':
     api = tweepy.API(auth)
 # add timer here
     start_time = time.time()
-    twitter_stream = Stream(auth, MyListener(start_time, time_limit = 20, args.data_dir, args.query)) # using tweepy functionality
+    twitter_stream = Stream(auth, MyListener(start_time, time_limit = 5, data_dir = args.data_dir, query = args.query)) # using tweepy functionality
     twitter_stream.filter(track=[args.query]) # Searches for term of interest
     twitter_stream.disconnect() #disconnect the stream and stop streaming

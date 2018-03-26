@@ -1,8 +1,7 @@
 The following are my personal notes as I work on the project.
 
 Current Work
-can get one interacting plot with two data sets.
-but want two subplots with two data sets.
+
 interacting subplots
     https://plot.ly/python/text-and-annotations/ !!!
     https://plot.ly/python/time-series/
@@ -10,9 +9,14 @@ interacting subplots
 and to make subplots:
     https://plot.ly/python/subplots/
 
+need some way to describe what polarity and sentiment are
 
 why are tweets cut off in tsv??? character limit???
-normalize likes, retweets, and sentiment so I can plot on one plot
+    maybe: 
+        https://github.com/tweepy/tweepy/issues/935
+            @jaycech3n hey, you're correct, thank you for that. I assumed I was already using tweet_mode='extended' but I was not. For other people the way to go is:
+
+        a = api.get_status(912886007451676672, tweet_mode='extended')
 
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
@@ -30,7 +34,9 @@ try using regex for hashtags. see regex in code
 
 Future plans:
 word usage in a time series...and mood changes
-
+colors, axis names
+statistics on time series
+apply to other people, need to make paths non hardcoded, and saved/opened files 
 good stuff in R, like topic modeling
 https://www.tidytextmining.com/nasa.html
 

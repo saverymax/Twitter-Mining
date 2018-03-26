@@ -5,6 +5,7 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
+from sklearn.preprocessing import scale
 import os
 
 def time_series(tweet_dataframe):
@@ -54,17 +55,17 @@ def time_series(tweet_dataframe):
     fig.append_trace(sentiment_data, 2, 1)
     plot_url = py.plot(fig) 
 
-def normalize_data(tweet_dataframe):
+def normalize_data(column_name):
     """Normalize columns in the tweet data, especially since polarity and subjectivity and are two different scales."""
 
-    tweet_dataframe['polarity'] =tweet_dataframe['polarity'].apply(lambda x: (x**2)/x) 
-    #(tweet_dataframe['polarity']**2)/tweet_dataframe['polarity']  
-    print(tweet_dataframe['polarity'])
-    return(tweet_dataframe)
+    normalized_data = pd.Series(scale(column_name))
+    return(normalized_data)
 
 path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
 os.chdir(path)
 
 tweet_data = pd.read_csv("converted_tweets_sentiment.tsv", sep = '\t', parse_dates=[2]) # Neccessary to parse_dates to put in format that can be read and plotted.
 #tweet_data = normalize_data(tweet_data) # this isn't working because can't do math with zeros
+tweet_data['polarity'] = normalize_data(tweet_data['polarity'])
+tweet_data['subjectivity'] = normalize_data(tweet_data['subjectivity'])
 time_series(tweet_data)

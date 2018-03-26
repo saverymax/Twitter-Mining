@@ -27,7 +27,7 @@ def get_parser():
                         dest = "time",
                         type = int,
                         help = "Time to stream tweets",
-                        default = 5)
+                        default = 20)
     return parser
 
 class MyStreamListener(tweepy.StreamListener):
@@ -42,24 +42,40 @@ class MyStreamListener(tweepy.StreamListener):
         self.time_limit = time_limit 
         self.start_time = start_time
         self.term_list = "_".join(term_list)
+
     def on_status(self, status):
         """Called when a new status arrives i.e., a new tweet that matches specified terms"""
-        
-        print(status.text)
+        #print(status['text'])
+        #return(status)
         return True 
-    def on_data(self, raw_data):
+
+    def on_data(self, data):
         """Called when raw data is received from connection."""
         
         while (time.time() - self.start_time) < self.time_limit:
             try:
-                with open('/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/filename.jsonl','a') as outfile:
-                    outfile.write(json.dumps(raw_data)+"\n")
+                # If statements are necessary to deal with deleted tweets and tweet limit that prevent tweet from being added to jsonl
+                if "delete" in data:
+                    print("deleted tweet found")
+                    pass
+
+                elif 'limit' in data:
+                    print("limit in data found")
+                    pass
+
+                else:
+                    with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
+                        data = json.loads(data) 
+                        outfile.write(json.dumps(data) + "\n")
+
             except BaseException as e:
                 print("Error in method on_data: {}".format(e))
                 time.sleep(5) 
-                pass
-        print("done")
-        return False 
+            
+            return True # Return true to keep stream flowing
+
+        return False # Return false to end stream
+
 
 if __name__== '__main__':
     parser = get_parser()
