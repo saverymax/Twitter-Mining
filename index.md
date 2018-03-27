@@ -8,8 +8,10 @@ President Trump's most commonly used words in his 500 most recent tweets
 President Trump's most commonly used hashtags in his 500 most recent tweets
 ![Trumps most commonly used hashtags in his 500 most recent tweets](/figures/hashtags.png)
 
-Time series of retweets and likes of Trumps tweets
-![Time series of retweets and likes]()
+See an interactive time series documenting Trump's tweets and tweet metrics 
+[here](https://saverymax.github.io/Twitter-Mining/Trump_time_series)
+
+
 Current projects: Sentiment analysis of streaming tweet data and tweets of politicians of interest
 
 
