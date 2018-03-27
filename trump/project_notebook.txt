@@ -1,5 +1,6 @@
 The following are my personal notes as I work on the project.
 
+shit, deleted config and plotly credentials, somehow when I checkedout
 Current Work
 
 interacting subplots

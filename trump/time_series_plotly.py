@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import scale
 import os
 
+
+"""Script in which time series of President Trump's tweets is generated. Two plots are produced: One comparing retweets and likes, another comparing subjectivity and polarity. The polarity metric describes the positive and negative content used in the text of the tweets. The plots can be found at https://plot.ly/~savery_max/48.embed."""
+
+
 def time_series(tweet_dataframe):
     """Using data from pandas dataframe, create a time series plot of the president's retweets, likes, polarity and subjectivity"""
    
@@ -51,7 +55,7 @@ def time_series(tweet_dataframe):
     # plot_url = py.plot(data_1)
 
     fig = tls.make_subplots(rows=2, cols=1, subplot_titles = ('Likes and Retweets', 'Polarity and Subjectivity'))
-    fig['layout'].update(title='Time series of trumps tweets')
+    fig['layout'].update(title='Time series of President Trumps tweets')
     fig['layout']['xaxis1'].update(title='Date')
     fig['layout']['yaxis1'].update(title='Likes and Retweet Frequency')
     fig['layout']['xaxis2'].update(title='Date')
@@ -78,3 +82,4 @@ tweet_data = pd.read_csv('converted_tweets_sentiment.tsv', sep = '\t', parse_dat
 tweet_data['polarity'] = normalize_data(tweet_data['polarity'])
 tweet_data['subjectivity'] = normalize_data(tweet_data['subjectivity'])
 time_series(tweet_data)
+
