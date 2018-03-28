@@ -42,11 +42,17 @@ class MyListener(StreamListener):
         self.outfile = "%s/stream_%s.json" % (data_dir, query_fname)
 
     def on_data(self, data):
+<<<<<<< HEAD:streaming_tweets/working_twitter_stream.py
         print("on_data function")
         while (time.time() - self.time) < self.limit:
             try:
                 with open(self.outfile, 'a') as file:
                     print(type(data))
+=======
+        while (time.time() - self.time) < self.limit:
+            try:
+                with open(self.outfile, 'a') as file:
+>>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134:streaming_tweets/working_twitter_stream.py
                     file.write(data)
                     #print(data)
                     return True
@@ -97,6 +103,10 @@ if __name__ == '__main__':
     api = tweepy.API(auth)
 # add timer here
     start_time = time.time()
+<<<<<<< HEAD:streaming_tweets/working_twitter_stream.py
     twitter_stream = Stream(auth, MyListener(start_time, time_limit = 5, data_dir = args.data_dir, query = args.query)) # using tweepy functionality
+=======
+    twitter_stream = Stream(auth, MyListener(start_time, time_limit = 20, args.data_dir, args.query)) # using tweepy functionality
+>>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134:streaming_tweets/working_twitter_stream.py
     twitter_stream.filter(track=[args.query]) # Searches for term of interest
     twitter_stream.disconnect() #disconnect the stream and stop streaming
