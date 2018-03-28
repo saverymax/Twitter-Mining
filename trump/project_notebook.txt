@@ -3,6 +3,15 @@ The following are my personal notes as I work on the project.
 shit, deleted config and plotly credentials, somehow when I checkedout
 Current Work
 
+
+why are tweets cut off in tsv??? character limit???
+    maybe: 
+        https://github.com/tweepy/tweepy/issues/935
+            @jaycech3n hey, you're correct, thank you for that. I assumed I was already using tweet_mode='extended' but I was not. For other people the way to go is:
+
+        a = api.get_status(912886007451676672, tweet_mode='extended')
+
+
 interacting subplots
     https://plot.ly/python/text-and-annotations/ !!!
     https://plot.ly/python/time-series/
@@ -12,12 +21,6 @@ and to make subplots:
 
 need some way to describe what polarity and sentiment are
 
-why are tweets cut off in tsv??? character limit???
-    maybe: 
-        https://github.com/tweepy/tweepy/issues/935
-            @jaycech3n hey, you're correct, thank you for that. I assumed I was already using tweet_mode='extended' but I was not. For other people the way to go is:
-
-        a = api.get_status(912886007451676672, tweet_mode='extended')
 
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
