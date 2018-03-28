@@ -1,4 +1,5 @@
 Current work: 
+<<<<<<< HEAD
 
 analysis working, go to next step
 but what's with the limit in the twitter.py file. Check tweepy source
@@ -21,5 +22,15 @@ http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streami
 
 twitter time out:
 https://developer.twitter.com/en/docs/basics/rate-limiting
+=======
+trying to get timing to work so I can uh stop it
+plot streaming data
+search for multiple terms
+from trump analysis, add in graphing features and text filtering
+
+future:
+sentiment analysis
+add the command line utility (fine naming) to other files in twitter-mining directory
+>>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
 
 
