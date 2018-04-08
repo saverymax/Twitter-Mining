@@ -1,37 +1,13 @@
-The following are my personal notes as I work on the project.
-
-shit, deleted config and plotly credentials, somehow when I checkedout
-Current Work
-<<<<<<< HEAD
-
 
 why are tweets cut off in tsv??? character limit???
     maybe: 
         https://github.com/tweepy/tweepy/issues/935
             @jaycech3n hey, you're correct, thank you for that. I assumed I was already using tweet_mode='extended' but I was not. For other people the way to go is:
 
-        a = api.get_status(912886007451676672, tweet_mode='extended')
+        a = api.get_status(912886007451676672, tweet_mode='extended'
 
-
-=======
-can get one interacting plot with two data sets.
-but want two subplots with two data sets.
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
-interacting subplots
-    https://plot.ly/python/text-and-annotations/ !!!
-    https://plot.ly/python/time-series/
-    https://plot.ly/python/line-and-scatter/
-and to make subplots:
-    https://plot.ly/python/subplots/
-
-<<<<<<< HEAD
-need some way to describe what polarity and sentiment are
-
-=======
 
 why are tweets cut off in tsv??? character limit???
-normalize likes, retweets, and sentiment so I can plot on one plot
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
 
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
@@ -41,21 +17,25 @@ https://marcobonzanini.com/2015/01/19/sentiment-analysis-with-python-and-scikit-
 https://gist.github.com/bonzanini/c9248a239bbab0e0d42e
 https://medium.com/tensorist/classifying-yelp-reviews-using-nltk-and-scikit-learn-c58e71e962d9
 
+bag of words model:
+https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
+
+using mnb and svm, with stemming root words
+https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
+
+useful general info on ml on text:
+https://www.safaribooksonline.com/library/view/applied-text-analysis/9781491963036/ch04.html
+
 train based on angry, arrogant, nostalgic, exaggerating? 
 
 why is there a single #? is that coming from the tokenizer or is it in the tweets?
 also, I have fewer hashtags than I used to. See saved hashtag png. 
 try using regex for hashtags. see regex in code
 
-Future plans:
-word usage in a time series...and mood changes
-<<<<<<< HEAD
-colors, axis names
 statistics on time series
-apply to other people, need to make paths non hardcoded, and saved/opened files 
-=======
 
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
+apply to other people, need to make paths non hardcoded, and saved/opened files 
+
 good stuff in R, like topic modeling
 https://www.tidytextmining.com/nasa.html
 
@@ -72,4 +52,11 @@ $ python -m textblob.download_corpora
 refs:
 https://dev.to/rodolfoferro/sentiment-analysis-on-trumpss-tweets-using-python-
 http://textblob.readthedocs.io/en/dev/install.html
+
+interacting subplots
+    https://plot.ly/python/text-and-annotations/ !!!
+    https://plot.ly/python/time-series/
+    https://plot.ly/python/line-and-scatter/
+and to make subplots:
+    https://plot.ly/python/subplots/
 

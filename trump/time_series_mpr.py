@@ -41,8 +41,8 @@ def time_series(tweet_dataframe):
                             text = tweet_dataframe['filtered_text']
                             )
 
-    # For senitment analysis see description given by Tweepy documentation:
-    # "The polarity (positivity and negativity) score is a float within the range [-1.0, 1.0]. The subjectivity is a float within the range [0.0, 1.0] where 0.0 is very objective and 1.0 is very subjective."
+    # For sentiment analysis see description given by Tweepy documentation:
+    # "The polarity (positivity and negativity) score is a float within the range [-1.0, 1.0]. After normalization, the subjectivity is a float in the same range, where -1 is very objective and 1.0 is very subjective."
     polarity_data = go.Scatter(
                             x = tweet_dataframe['date'], 
                             y = tweet_dataframe['polarity'].values, 
@@ -83,7 +83,10 @@ os.chdir(path)
 
 tweet_data = pd.read_csv('converted_tweets_sentiment.tsv', sep = '\t', parse_dates=[2]) # Neccessary to parse_dates into format that can be read and plotted.
 
+# Normalize the data
 tweet_data['polarity'] = normalize_data(tweet_data['polarity'])
 tweet_data['subjectivity'] = normalize_data(tweet_data['subjectivity'])
+
+# Generate the time series
 time_series(tweet_data)
 

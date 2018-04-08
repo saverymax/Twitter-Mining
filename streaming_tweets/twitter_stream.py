@@ -8,7 +8,11 @@ import config
 import json 
 import time
 
-"""This file will generate a twitter stream of a term or set of terms, as given in the command line, for a given period of time, as specified in command line. http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html was used as documentation.
+"""This file will generate a twitter stream of a term or set of terms, for a given period of time, as specified in command line. http://docs.tweepy.org/en/v3.4.0/streaming_how_to.html was used as documentation.
+
+To run, see sample below:
+--term dog cat pig #diggity --time 180
+This will search for all terms for 3 minutes. 
 """
 
 def get_parser():
@@ -45,7 +49,7 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         """Called when a new status arrives i.e., a new tweet that matches specified terms"""
-        #print(status['text'])
+        #print(status.extended_tweet['text'])
         #return(status)
         return True 
 
@@ -53,8 +57,14 @@ class MyStreamListener(tweepy.StreamListener):
         """Called when raw data is received from connection."""
         
         while (time.time() - self.start_time) < self.time_limit:
+            data = json.loads(data) 
+            
             try:
                 # If statements are necessary to deal with deleted tweets and tweet limit that prevent tweet from being added to jsonl
+                if "extended_tweet" in data:
+                    tweet = data['extended_tweet']['full_text']
+                    print(tweet)
+
                 if "delete" in data:
                     print("deleted tweet found")
                     pass
@@ -65,7 +75,6 @@ class MyStreamListener(tweepy.StreamListener):
 
                 else:
                     with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
-                        data = json.loads(data) 
                         outfile.write(json.dumps(data) + "\n")
 
             except BaseException as e:
@@ -86,6 +95,6 @@ if __name__== '__main__':
     start_time = time.time()
 
     twitter_scraper = MyStreamListener(time_limit = args.time, start_time = start_time, term_list = args.terms) # Create the instance and set the time_limit. 
-    tweet_stream = tweepy.Stream(auth = api.auth, listener = twitter_scraper)
+    tweet_stream = tweepy.Stream(auth = api.auth, listener = twitter_scraper, tweet_mode= "extended")
     tweet_stream.filter(track=[",".join(args.terms)]) # Filter searches for all words in given list, and as args.terms is in a list, I have to unpack it first.
     tweet_stream.disconnect() #disconnect the stream and stop streaming
