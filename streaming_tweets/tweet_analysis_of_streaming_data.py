@@ -9,7 +9,6 @@ import string
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-<<<<<<< HEAD
 import pandas as pd
 import argparse
 import plotly.plotly as py
@@ -43,23 +42,10 @@ def tokenize(tweet):
     """Turn each word/symbol in the text of the tweet into a token."""
 
     # The .findall method is a part of the re library.
-=======
-
-"""This file will read the json file twitter_data.jsonl as created by get_users_tweets_jsonl.py
-It is called by get_tweets.sh after the tweets of all senators have been aggregated. It could also be called from the command line to visualize the tweets of any individual users who have tweets save in the file twitter_data.jsonl.
-
-It is also used to analyze streaming data.
-
-A plot of most common terms will be generated.
-"""
-
-def tokenize(tweet):
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
     return tokens_re.findall(tweet)
 
 def preprocess(tweet, lowercase = False):
     tokens = tokenize(tweet)
-<<<<<<< HEAD
     # Change all tokens to lowercase, unless token is an emoticon:
     tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
     return tokens
@@ -82,7 +68,7 @@ def read_tweets(jsonl_file):
     with open(jsonl_file,'r') as infile:
         for line in infile:
             tweet = json.loads(line)
-            print(line, "\n")
+            # print(tweet['full_text'], "\n")
             tweet_list.append(tweet['text'])
             tweet_date.append(tweet['created_at'])
             tweet_RT.append(tweet['retweet_count'])
@@ -95,7 +81,7 @@ def read_tweets(jsonl_file):
 
     # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}_converted_tweets.tsv',sep='\t')
+    tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(jsonl_file), sep='\t')
 
     return(terms_in_tweets)
 
@@ -162,63 +148,7 @@ class visualize():
         # for online plotting:
         #plotly_fig = tls.mpl_to_plotly(tweet_figure)
         #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
-=======
-    if lowercase:
-        tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
-    return tokens
 
-def read_tweets():
-
-    path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/streaming_data'
-    os.chdir(path)
-
-    punctuation = list(string.punctuation)
-    stop = stopwords.words('english') + punctuation + ['RT','via','amp', '...','.',"'"]
-    
-    terms_in_tweets = []
-
-    with open('twitter_data.jsonl','r') as infile: 
-        for line in infile:
-            tweet = json.loads(line)
-            terms_in_tweets.append(preprocess(tweet['text']))
-
-    terms_in_tweets = sum(terms_in_tweets, []) 
-   
-    tweet_content = [term for term in terms_in_tweets
-                    if term not in stop and not term.startswith(('#', '@','...','.',"'"))]
-  # gotta remove all whitespace!!! and fucking apostrophes 
-    hashtags = [term for term in terms_in_tweets if term.startswith('#')]
-    
-    return(tweet_content, hashtags)
-
-def word_frequency(tweets):
-    count_all = Counter()
-    # Update the counter
-    count_all.update(tweets)
-    # Print the first 5 most frequent words
-    print(count_all.most_common(5)) # weird I still have to use json.dumps
-    common_words = count_all.most_common(20)
-    return(common_words)
-
-def hashtag_frequency(hashtags):
-    count_all = Counter()
-    count_all.update(hashtags)
-    print(json.dumps(count_all.most_common(5))) # For reference in command line
-    common_hash = count_all.most_common(20)
-    return(common_hash)
-
-def visualize(common_word):
-    labels, freq = zip(*common_word)
-    indexes = np.arange(len(labels))
-    width = 0.7
-    plt.bar(indexes, freq, width)
-    plt.xticks(indexes + width * 0.5, labels, rotation = 55)
-    plt.xlabel('Terms used')
-    plt.ylabel('Frequency of terms')
-    plt.title('Term usage of Twitter Users')
-    plt.show()
-    plt.close()
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
 
 # @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
 # The following code will propose a pre-processing chain that will consider
@@ -244,7 +174,6 @@ regex_str = [
 ]
 
 regex_str_remove = [
-<<<<<<< HEAD
     #r'[^\x00-\x7F]+' # Apparently this removes any non ascii characters.
     r'[^\w ]' # removes all non alphanumeric stuffs (except spaces). [^\w #/] will leave or other special cases
     #https://stackoverflow.com/questions/1219915/regex-to-remove-apostrophe
@@ -269,22 +198,3 @@ if __name__ == '__main__':
     common_words.visualize_term_usage()
     common_hash = visualize(processed_tweets[1], "hashtags")
     common_hash.visualize_term_usage()
-=======
-    r'<[^>]+>', # HTML tags
-    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-    r'(?:(?:\d+,?)+(?:\.?\d+)?)',# numbers
-    r'[^\x00-\x7F]+' # Apparently this removes any non ascii characters.
-    ]
-
-tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
-emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
-excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
-
-
-tweets = read_tweets()# Lookup file
-# Index 1 holds the words of the tweet; index 2 holds the hashtags
-common_words = word_frequency(tweets[0])
-common_hash = hashtag_frequency(tweets[1])
-visualize(common_words)
-visualize(common_hash)
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134

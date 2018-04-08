@@ -1,18 +1,21 @@
 Current work: 
-<<<<<<< HEAD
 
-analysis working, go to next step
-but what's with the limit in the twitter.py file. Check tweepy source
-    it's a limit notice. Given by twitter when I have reached limit. How should I deal with it?
+weird stuff happened with github issue... make sure everything works
+
+as of 4-4-18
+got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in latera analysis. 
+used this to fix: https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
+
+want extended tweets... difficult in streaming
+try: https://stackoverflow.com/questions/47211501/twitter-streaming-api-not-return-full-tweets
+https://developer.twitter.com/en/docs/tweets/tweet-updates.html
+
+get tweet_analysis to save csv with right name... remove .jsonl
 
 plot time_series streaming data
 add in graphing features and text filtering
 networks! see refs in trump dir. Some possibilities for R. 
-
-future:
 sentiment analysis
-add the command line utility to other files in twitter-mining directory
-use methods in tweepy docs https://github.com/tweepy/tweepy/blob/master/tweepy/streaming.py to set time limit and disconnect.   
 
 
 refs:
@@ -22,15 +25,5 @@ http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streami
 
 twitter time out:
 https://developer.twitter.com/en/docs/basics/rate-limiting
-=======
-trying to get timing to work so I can uh stop it
-plot streaming data
-search for multiple terms
-from trump analysis, add in graphing features and text filtering
-
-future:
-sentiment analysis
-add the command line utility (fine naming) to other files in twitter-mining directory
->>>>>>> 0755d4310b0bb7aa18eb4bbf5b1288e615c9e134
 
 
