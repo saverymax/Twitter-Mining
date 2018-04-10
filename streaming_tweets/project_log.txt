@@ -2,21 +2,29 @@ Current work:
 
 weird stuff happened with github issue... make sure everything works
 
+
+4-9-18
+tried to run stream for an hour, got error:
+Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
+
+problem: "limit in data found"
+deal with rate limits
+
 as of 4-4-18
-got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in latera analysis. 
+got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in later analysis. 
 used this to fix: https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
 
-want extended tweets... difficult in streaming
-try: https://stackoverflow.com/questions/47211501/twitter-streaming-api-not-return-full-tweets
-https://developer.twitter.com/en/docs/tweets/tweet-updates.html
-
 get tweet_analysis to save csv with right name... remove .jsonl
+
+search for phrases:
+https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
+
+
 
 plot time_series streaming data
 add in graphing features and text filtering
 networks! see refs in trump dir. Some possibilities for R. 
 sentiment analysis
-
 
 refs:
 overwriting listener class:

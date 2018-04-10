@@ -140,7 +140,7 @@ class visualize():
         axis.set_xticklabels(((labels)) , rotation = 55)
         axis.set_xlabel('Terms used')
         axis.set_ylabel('Frequency of terms')
-        axis.set_title('Term usage of Trump')
+        axis.set_title('{} usage of Trump'.format(self.name))
         tweet_figure.savefig('{0}.png'.format(self.name), bbox_inches = 'tight') # not saving correctly
         plt.show()
         plt.close()
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     # Index 0 holds the words of the tweet; index 1 holds the dataframe.
     processed_tweets = process_tweets(tweets)
 
-    common_words = visualize(processed_tweets[0], "terms")
+    common_words = visualize(processed_tweets[0], "Term")
     common_words.visualize_term_usage()
-    common_hash = visualize(processed_tweets[1], "hashtags")
+    common_hash = visualize(processed_tweets[1], "Hashtag")
     common_hash.visualize_term_usage()

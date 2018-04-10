@@ -23,7 +23,7 @@ def get_parser():
     """
 
     parser = argparse.ArgumentParser(description = "Twitter stream") 
-    parser.add_argument("--term", 
+    parser.add_argument("--terms", 
                         dest = "terms", 
                         nargs='+',
                         help = "Terms to search via twitter")
