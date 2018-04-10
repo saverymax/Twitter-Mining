@@ -84,6 +84,12 @@ class MyStreamListener(tweepy.StreamListener):
             return True # Return true to keep stream flowing
 
         return False # Return false to end stream
+    
+    def on_exception(self, exception):
+        """Handle error: connection broken: IncompleteRead(0 bytes read, 512 more expected)"""
+        # ref: https://github.com/tweepy/tweepy/issues/650
+        print(exception)
+        return
 
 
 if __name__== '__main__':
@@ -91,7 +97,9 @@ if __name__== '__main__':
     args = parser.parse_args()
     auth = OAuthHandler(config.consumer_key, config.consumer_secret)
     auth.set_access_token(config.access_token, config.access_secret)
-    api = tweepy.API(auth)
+    #api = tweepy.API(auth)
+    # try:
+    api = tweepy.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
     start_time = time.time()
 
     twitter_scraper = MyStreamListener(time_limit = args.time, start_time = start_time, term_list = args.terms) # Create the instance and set the time_limit. 
