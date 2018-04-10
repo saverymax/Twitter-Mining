@@ -1,17 +1,37 @@
 #!/usr/bin/env python3
 from textblob import TextBlob
+import argparse
 import re
 import string
 import pandas as pd
 import os
 
+"""
+Sentiment analysis on time series data
+Call from commandline: python sentiment_analysis.py --file file.tsv
+"""
+
+def get_parser():
+    """
+    Set up command line options. In this script, the filename of the jsonl to be read must be given. Include file extension. 
+    Documentation: 
+    docs.python.org/2/library/argparse.html 
+    """
+
+    parser = argparse.ArgumentParser(description = "Twitter stream") 
+    parser.add_argument("--file", 
+                        dest = "filename", 
+                        help = "The file to be analyzed")
+    return parser
+
 class process_tweet():
     """Clean tweet and analyze text"""
 
-    def __init__(self, tweet_dataframe):
+    def __init__(self, tweet_dataframe, filename):
         """initiate instance of tweet text to be analyzed""" 
          
         self.tweet_dataframe = tweet_dataframe
+        self.filename = filename
 
     def filter_tweet(self):
         """Remove chosen elements from tweets. Depending on hardcoded values, this might be hashtags, @mentions, urls, or all non-alphanumeric characters."""
@@ -25,7 +45,7 @@ class process_tweet():
         
         # turn into list comp
         self.tweet_dataframe['filtered_text'] = [patterns.sub('', tweet['text']) for index, tweet in self.tweet_dataframe.iterrows()]  #clean tweet
-        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets_filtered.tsv',sep='\t')
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t')
     
     def process_sentiment(self):
         """Analyze sentiment with Textblob library. Dataframe must be filtered before this method is called."""
@@ -34,16 +54,19 @@ class process_tweet():
         self.tweet_dataframe['polarity'] = [i.polarity for i in tweet_sentiment]
         
         self.tweet_dataframe['subjectivity'] = [i.subjectivity for i in tweet_sentiment]
-        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets_sentiment.tsv',sep='\t')
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t')
 
     
+if __name__ == '__main__':
+    # initiate parser in order to read in filename to analyze. 
+    parser = get_parser()
+    args = parser.parse_args()
    
+    path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data'
+    os.chdir(path)
+    tweet_dataframe = pd.read_csv(args.filename, sep='\t')
 
-path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
-os.chdir(path)
-tweet_dataframe = pd.read_csv('converted_tweets.tsv', sep='\t')
-
-trumps_analysis = process_tweet(tweet_dataframe)
+    analysis = process_tweet(tweet_dataframe, args.filename)
      
-trumps_analysis.filter_tweet()
-trumps_analysis.process_sentiment()
+    analysis.filter_tweet()
+    analysis.process_sentiment()
