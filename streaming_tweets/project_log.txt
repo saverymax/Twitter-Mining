@@ -1,8 +1,6 @@
 Current work: 
 
-weird stuff happened with github issue... make sure everything works
-
-stuck trying to remove big file from git history... see git
+got stream to plot with plotly, got to check more though
 
 4-9-18
 tried to run stream for an hour, got error:
@@ -15,19 +13,15 @@ but see here for more permanent fix
 problem: "limit in data found"
 deal with rate limits
 
-as of 4-4-18
-got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in later analysis. 
-used this to fix: https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
-
 make paths soft and flexible :)
-
 
 search for phrases:
 https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
 
+as of 4-4-18
+got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in latera analysis. 
+used this to fix: https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
 
-plot time_series streaming data
-add in graphing features and text filtering
 networks! see refs in trump dir. Some possibilities for R. 
 sentiment analysis
 

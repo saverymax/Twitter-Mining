@@ -94,6 +94,7 @@ def normalize_data(column_name):
 
     normalized_data = pd.Series(scale(column_name))
     return(normalized_data)
+
 if __name__ == '__main__':
     # initiate parser in order to read in filename to analyze. 
     parser = get_parser()
