@@ -14,6 +14,8 @@ import argparse
 Script in which time series of tweets is generated. Two plots are produced: One comparing frequency of retweets and likes, another comparing subjectivity and polarity. The polarity metric describes the positive and negative content used in the text of the tweets. 
 
 The plots can be found at https://saverymax.github.io/Twitter-Mining/
+
+Call with python time_series_plotly.py --file file.tsv
 """
 
 def get_parser():
