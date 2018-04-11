@@ -1,5 +1,6 @@
 Current work: 
 
+<<<<<<< HEAD
 got stream to plot with plotly, got to check more though
 
 4-9-18
@@ -17,6 +18,24 @@ make paths soft and flexible :)
 
 search for phrases:
 https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
+=======
+weird stuff happened with github issue... make sure everything works
+
+as of 4-4-18
+got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in latera analysis. 
+used this to fix: https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
+
+want extended tweets... difficult in streaming
+try: https://stackoverflow.com/questions/47211501/twitter-streaming-api-not-return-full-tweets
+https://developer.twitter.com/en/docs/tweets/tweet-updates.html
+
+get tweet_analysis to save csv with right name... remove .jsonl
+
+plot time_series streaming data
+add in graphing features and text filtering
+networks! see refs in trump dir. Some possibilities for R. 
+sentiment analysis
+>>>>>>> 8670af71ac5e97086f60fb91e67cc24895b178fd
 
 as of 4-4-18
 got extended tweets to print... just need to make sure they are in the daca_jsonl and I use them in latera analysis. 
