@@ -2,6 +2,7 @@ Current work:
 
 weird stuff happened with github issue... make sure everything works
 
+stuck trying to remove big file from git history... see git
 
 4-9-18
 tried to run stream for an hour, got error:
@@ -23,7 +24,6 @@ make paths soft and flexible :)
 
 search for phrases:
 https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
-
 
 
 plot time_series streaming data
