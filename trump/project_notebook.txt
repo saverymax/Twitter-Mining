@@ -1,13 +1,14 @@
+pipeline issues:
 
-why are tweets cut off in tsv??? character limit???
-    maybe: 
-        https://github.com/tweepy/tweepy/issues/935
-            @jaycech3n hey, you're correct, thank you for that. I assumed I was already using tweet_mode='extended' but I was not. For other people the way to go is:
-
-        a = api.get_status(912886007451676672, tweet_mode='extended'
+why is there a single #? is that coming from the tokenizer or is it in the tweets?
+also, I have fewer hashtags than I used to. See saved hashtag png. 
+try using regex for hashtags. see regex in code
 
 
-why are tweets cut off in tsv??? character limit???
+
+
+sentiment:
+
 
 figure out how I want to do the sentiment analysis
 http://textblob.readthedocs.io/en/dev/classifiers.html#classifiers
@@ -28,19 +29,19 @@ https://www.safaribooksonline.com/library/view/applied-text-analysis/97814919630
 
 train based on angry, arrogant, nostalgic, exaggerating? 
 
-why is there a single #? is that coming from the tokenizer or is it in the tweets?
-also, I have fewer hashtags than I used to. See saved hashtag png. 
-try using regex for hashtags. see regex in code
 
 statistics on time series
+
 
 apply to other people, need to make paths non hardcoded, and saved/opened files 
 
 good stuff in R, like topic modeling
 https://www.tidytextmining.com/nasa.html
 
+
 compare word usage between people:
 https://www.tidytextmining.com/nasa.html
+
 
 tech notes:
 
