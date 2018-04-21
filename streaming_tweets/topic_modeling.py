@@ -31,107 +31,124 @@ def get_parser():
     return parser
 
 
-def nmf_analysis(data):
-    """
-    Vectorize and transform tweet data
-    Basic tutorial below:
-    http://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html
-    """
+class topic_modeling():
     
-    n_features = 1000 
-    n_topics = 10
-    n_top_words = 10
+    def __init__(self, tweet_data, original_text):
 
-    tfidf_vectorizer = TfidfVectorizer(max_df = 0.95, min_df = 2, max_features=n_features, stop_words='english')
-    # http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
-    # term frequency * inverse document frequency
+        self.data = tweet_data
+        self.tweet = original_text
 
-    tfidf = tfidf_vectorizer.fit_transform(data)
-    tfidf_feature_names = tfidf_vectorizer.get_feature_names()
+    def nmf_analysis(self):
+        """
+        Vectorize and transform tweet data
+        Basic tutorial below:
+        http://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html
+        """
+        
+        n_features = 1000 
+        n_topics = 15
 
-    nmf = NMF(n_components=n_topics, random_state=0,alpha=.1, l1_ratio=.5).fit(tfidf)
-    nmf_transform = nmf.transform(tfidf)
-    display_topics(nmf, tfidf_feature_names, n_top_words)
-    run_tsne(nmf_transform)
+        tfidf_vectorizer = TfidfVectorizer(max_df = 0.95, min_df = 2, max_features=n_features, stop_words='english')
+        # http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html
+        # term frequency * inverse document frequency
 
-def lda_analysis(data):
-    """ 
-    LDA can only use raw term counts for LDA because it is a probabilistic graphical model
-    """
+        tfidf = tfidf_vectorizer.fit_transform(self.data)
+        tfidf_feature_names = tfidf_vectorizer.get_feature_names()
 
-    n_features = 1000 
-    n_topics = 10
+        nmf = NMF(n_components=n_topics, random_state=0,alpha=.1, l1_ratio=.5).fit(tfidf)
+        nmf_transform = nmf.transform(tfidf)
+        topic_modeling.display_topics(nmf, tfidf_feature_names)
+        nmf_keys = []
+        for i in range(nmf_transform.shape[0]):
+            nmf_keys.append(nmf_transform[i].argmax())
 
-    tf_vectorizer = CountVectorizer(max_df = 0.95, min_df = 2, max_features = n_features, stop_words='english')
-    tf = tf_vectorizer.fit_transform(data)
-    tf_feature_names = tf_vectorizer.get_feature_names()
-    #print(tf_feature_names)
-   
-    lda = LatentDirichletAllocation(n_components = n_topics, max_iter = 5, learning_method='online', learning_offset=50.,random_state=0).fit(tf)
-    lda_transform = lda.transform(tf) 
-    lda_keys = []
-    for i in range(lda_transform.shape[0]):
-        lda_keys.append(lda_transform[i].argmax())
+        return nmf_transform, nmf_keys
 
-    #display_topics(lda, tf_feature_names, n_top_words)
-    run_tsne(lda_transform, lda_keys, data)
- 
-def run_tsne(transform, keys, data):
-    """
-    Run tsne
-    """
+    def lda_analysis(self):
+        """ 
+        LDA can only use raw term counts for LDA because it is a probabilistic graphical model
+        """
 
-    tsne = TSNE(n_components = 2, verbose = 1, random_state = 0, angle = .99, init = 'pca').fit_transform(transform)
-    visualize(tsne, keys, data)
+        n_features = 1000 
+        n_topics = 20 
+
+        tf_vectorizer = CountVectorizer(max_df = 0.95, min_df = 2, max_features = n_features, stop_words='english')
+        tf = tf_vectorizer.fit_transform(self.data)
+        tf_feature_names = tf_vectorizer.get_feature_names()
+        #print(tf_feature_names)
+       
+        lda = LatentDirichletAllocation(n_components = n_topics, max_iter = 5, learning_method='online', learning_offset=50.,random_state=0).fit(tf)
+        lda_transform = lda.transform(tf) 
+        lda_keys = []
+        for i in range(lda_transform.shape[0]):
+            lda_keys.append(lda_transform[i].argmax())
+
+        topic_modeling.display_topics(lda, tf_feature_names)
+
+        return lda_transform, lda_keys
+     
+    def run_tsne(self, transform):
+        """
+        Run tsne
+        """
+
+        tsne = TSNE(n_components = 2, verbose = 1, random_state = 0, angle = .99, init = 'pca').fit_transform(transform)
+        return tsne
 
 
-def display_topics(model, feature_names):
-    """
-    Display the most frequent words per topic
-    """
+    def display_topics(model, feature_names):
+        """
+        Display the most frequent words per topic
+        """
 
-    n_top_words = 10
+        n_top_words = 10
 
-    for topic_n, topic in enumerate(model.components_):
-        print("Topic {}:".format(topic_n))
-        print(",".join([feature_names[i] for i in topic.argsort()[:-n_top_words - 1:-1]]),"\n")
+        for topic_n, topic in enumerate(model.components_):
+            print("Topic {}:".format(topic_n))
+            print(",".join([feature_names[i] for i in topic.argsort()[:-n_top_words - 1:-1]]),"\n")
 
 
-def visualize(tsne_data, keys, data): 
-    """
-    Visualize dimensionally reduced data
-    """
+    def visualize(self, tsne_data, keys): 
+        """
+        Visualize dimensionally reduced data
+        """
 
-    py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
+        py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
 
-    # take tsne plot from lecture
-    color_scale = np.linspace(0, 1, len(set(keys)))
-    c = [plt.cm.Set2(color_scale[i]) for i in keys]
-    
-    # Custom colors:
-    #colormap = np.array(["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
-    #                     "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5"])
-    
-    fig, ax = plt.subplots()
-    
-    # Plot with custom colors
-    #ax.scatter(tsne_data[:, 0], tsne_data[:, 1], 
-    #           color = colormap[keys][:len(keys)], alpha=0.75)
+        # take tsne plot from lecture
+        color_scale = np.linspace(0, 1, len(set(keys)))
+        c = [plt.cm.Set2(color_scale[i]) for i in keys]
+        
+        # Custom colors:
+        #colormap = np.array(["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c",
+        #                     "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5"])
+        
+        fig, ax = plt.subplots()
+        
+        # Plot with custom colors
+        #ax.scatter(tsne_data[:, 0], tsne_data[:, 1], 
+        #           color = colormap[keys][:len(keys)], alpha=0.75)
 
-    # otherwise:
-    ax.scatter(tsne_data[:, 0], tsne_data[:, 1], color = c, alpha=0.75)
-    plt.show()
+        # otherwise:
+        ax.scatter(tsne_data[:, 0], tsne_data[:, 1], color = c, alpha=0.75)
+        plt.show()
 
-    tsne_plot = go.Scatter(
-            x = tsne_data[:, 0],
-            y = tsne_data[:, 1],
-            mode = "markers",
-            name = "Tweet topics",
-            marker = dict(color = keys, colorscale = c),
-            text = data
-            )
-    datas = [tsne_plot] 
-    plot_url = py.plot(datas) 
+        tsne_plot = go.Scatter(
+                x = tsne_data[:, 0],
+                y = tsne_data[:, 1],
+                mode = "markers",
+                name = "Tweet topics",
+                marker = dict(color = keys, colorscale = c),
+                text = self.tweet
+                )
+        layout = go.Layout(
+               title = 'Topic modeling of tweets', 
+               hovermode = 'closest'
+                )
+       
+        data = [tsne_plot]
+        fig = go.Figure(data = data, layout = layout)
+        plot_url = py.plot(fig)
 
 if __name__ == '__main__':
     # initiate parser in order to read in filename to analyze. 
@@ -141,6 +158,10 @@ if __name__ == '__main__':
     tweet_dataframe = pd.read_csv(args.filename, sep = '\t')
 
     #nmf_analysis(tweet_dataframe['filtered_text']) 
-    
-    lda_analysis(tweet_dataframe['filtered_text']) 
-     
+    model = topic_modeling(tweet_dataframe['filtered_text'], tweet_dataframe['text'])
+    transformed_data_nmf, keys_nmf = model.nmf_analysis()
+    transformed_data_lda, keys_lda = model.lda_analysis()
+    tsne_nmf = model.run_tsne(transformed_data_nmf) 
+    tsne_lda = model.run_tsne(transformed_data_lda) 
+    #model.visualize(tsne_nmf, keys_nmf)
+    model.visualize(tsne_lda, keys_lda)

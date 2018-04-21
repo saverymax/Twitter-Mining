@@ -87,15 +87,7 @@ def read_tweets(jsonl_file, filename):
 
     # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-<<<<<<< HEAD
-<<<<<<< HEAD
-    tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(filename), sep='\t')
-=======
     tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(jsonl_file), sep='\t')
->>>>>>> 8670af71ac5e97086f60fb91e67cc24895b178fd
-=======
-    tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(jsonl_file), sep='\t')
->>>>>>> 8670af71ac5e97086f60fb91e67cc24895b178fd
 
     return(terms_in_tweets)
 
@@ -116,7 +108,7 @@ def process_tweets(terms_in_tweets):
     return(tweet_content, hashtags)
 
 class visualize():
-    """Initiate instance of twitter data."""
+    """Basic visualization of twitter data."""
 
     def __init__(self, terms, term_type, filename):
         """Initiate the instance"""

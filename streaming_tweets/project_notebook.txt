@@ -1,0 +1,83 @@
+Current work: 
+
+explore topics. netork of coocurring words. see tidytextmining
+viz word frequency per topic
+
+rewrite using Pipeline (see week 12)
+
+lemmatization! change roots with WordNetLemmatizer()
+how to do all n, v, a etc
+
+need to remove rt from data... lots of retweets! 
+
+need to process tsv like I process json in original analysis
+
+but
+do I want retweets?
+    could put include_rts=False... don't know where this goes for streaming
+    https://stackoverflow.com/questions/28113266/tweepy-include-rts-not-working
+
+    for tweet_info in tweepy.Cursor(api.search, q=query, lang = ‘en’,       
+    tweet_mode=‘extended’).items(100):
+    if ‘retweeted_status’ in dir(tweet_info):
+    tweet=tweet_info.retweeted_status.full_text
+    else:
+    tweet=tweet_info.full_text
+
+    oh here: 
+    https://stackoverflow.com/questions/29588177/save-full-text-of-a-tweet-with-tweepy
+
+4-9-18
+tried to run stream for an hour, got error:
+Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
+trying solution from here:
+https://github.com/tweepy/tweepy/issues/650
+but see here for more permanent fix
+    https://stackoverflow.com/questions/26638329/incompleteread-error-when-retrieving-twitter-data-using-python
+
+problem: "limit in data found"
+deal with rate limits
+
+make paths soft and flexible :)
+
+search for phrases:
+https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
+
+topic modeling: I want to see a network or related words
+
+https://www.machinelearningplus.com/nlp/topic-modeling-python-sklearn-examples/
+    good example of lda + grid search  + other stuff in python
+http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
+https://buhrmann.github.io/tfidf-analysis.html
+    check this out
+http://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf    _lda.html
+   basic tutorial
+https://www.kaggle.com/xdsarkar/nips-papers-visualized-with-nmf-and-t-sne
+    alright
+https://shuaiw.github.io/2016/12/22/topic-modeling-and-tsne-visualzation.html 
+    good for viz with tsne
+https://radimrehurek.com/gensim/
+https://nlpforhackers.io/topic-modeling/ 
+https://medium.com/mlreview/topic-modeling-with-scikit-learn-e80d33668730
+    good basic review of using nmf/lda
+https://www.analyticsvidhya.com/blog/2016/08/beginners-guide-to-topic-modeling-in-python/
+https://de.dariah.eu/tatom/topic_model_python.html
+https://www.tidytextmining.com/nasa.html
+https://www.tidytextmining.com/topicmodeling.html
+    both are good to see what I can do with topic modeling and viz
+https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b
+    tsne/pca tutorial
+also see refs in trump dir.
+
+
+refs:
+overwriting listener class:
+use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
+http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streaming-api/
+
+twitter time out:
+https://developer.twitter.com/en/docs/basics/rate-limiting
+
+extended tweets:
+https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
+

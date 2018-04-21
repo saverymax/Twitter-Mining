@@ -5,6 +5,7 @@ import re
 import string
 import pandas as pd
 import os
+from nltk.stem import WordNetLemmatizer as WNL
 
 """
 Sentiment analysis on time series data
@@ -13,7 +14,7 @@ Call from commandline: python sentiment_analysis.py --file file.tsv
 
 def get_parser():
     """
-    Set up command line options. In this script, the filename of the jsonl to be read must be given. Include file extension. 
+    Set up command line options. In this script, the filename of the tsv to be read must be given. Include file extension. 
     Documentation: 
     docs.python.org/2/library/argparse.html 
     """
@@ -37,14 +38,31 @@ class process_tweet():
         """Remove chosen elements from tweets. Depending on hardcoded values, this might be hashtags, @mentions, urls, or all non-alphanumeric characters."""
         # need to change all cases
         excess_symbols = '[^\w ]+'
+        stopwords = r'(^RT)'
         #hashtags = r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)" # hash-tags
         #at_mentions = r'(?:@[\w_]+)' # @-mentions. My decision is to leave these in the tweets and just remove the # and @
         tweet_urls = r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+' # URLs
         #patterns = re.compile('('+hashtags+'|'+at_mentions+'|'+tweet_urls+'|'+excess_symbols+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
-        patterns = re.compile('('+tweet_urls+'|'+excess_symbols+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
+        patterns = re.compile('('+tweet_urls+'|'+excess_symbols+'|'+stopwords+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
         
-        # turn into list comp
+        # get rid of all the funky stuff 
+        
         self.tweet_dataframe['filtered_text'] = [patterns.sub('', tweet['text']) for index, tweet in self.tweet_dataframe.iterrows()]  #clean tweet
+        
+        #Lemmatization
+        # https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
+        # could do a thing where I figure out if n v a beforehand and check. see ref
+        tweet_lemmatizer = WNL()
+        sentences = []
+        for i in tweet_dataframe['filtered_text']:
+            sentence = i.split()
+            sentence = [tweet_lemmatizer.lemmatize(j, pos = 'v') for j in sentence]
+            # sentence = [tweet_lemmatizer.lemmatize(j, pos = 'n') for j in sentence]
+            sentences.append(" ".join(sentence))
+
+        tweet_dataframe['filtered_text'] = pd.Series(sentences) 
+        # convert to lower case:
+        tweet_dataframe['filtered_text'] = tweet_dataframe['filtered_text'].str.lower()
         self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t')
     
     def process_sentiment(self):
