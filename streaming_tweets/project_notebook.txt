@@ -1,16 +1,24 @@
 Current work: 
+4-28-18
+
+well the issue is that I can't save it right after I have dropped na values... 
+which was actually an issue before. So it will work if I dropna before running. 
+
+legend using topic modeling and see ref in py script from max guy
 
 explore topics. netork of coocurring words. see tidytextmining
 viz word frequency per topic
 
-rewrite using Pipeline (see week 12)
+look more at only a few topics
+
+try using Pipeline (see week 12)
 
 lemmatization! change roots with WordNetLemmatizer()
 how to do all n, v, a etc
-
-need to remove rt from data... lots of retweets! 
-
-need to process tsv like I process json in original analysis
+https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
+https://stackoverflow.com/questions/32957895/wordnetlemmatizer-not-returning-the-right-lemma-unless-pos-is-explicit-python
+https://stackoverflow.com/questions/25534214/nltk-wordnet-lemmatizer-shouldnt-it-lemmatize-all-inflections-of-a-word
+basically have to determine which part of speech word is part of and then stem based on that
 
 but
 do I want retweets?
@@ -43,7 +51,6 @@ make paths soft and flexible :)
 search for phrases:
 https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
 
-topic modeling: I want to see a network or related words
 
 https://www.machinelearningplus.com/nlp/topic-modeling-python-sklearn-examples/
     good example of lda + grid search  + other stuff in python
