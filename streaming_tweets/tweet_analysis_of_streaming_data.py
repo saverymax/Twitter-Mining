@@ -44,69 +44,97 @@ def convert_name(jsonl_file):
     split_name = jsonl_file.split(".")
     return(split_name[0])
 
-def tokenize(tweet):
-    """Turn each word/symbol in the text of the tweet into a token."""
-
-    # The .findall method is a part of the re library.
-    return tokens_re.findall(tweet)
-
-def preprocess(tweet, lowercase = False):
-    """Tokenize the tweets, converting all to lowercase in the process"""
-    tokens = tokenize(tweet)
-    # Change all tokens to lowercase, unless token is an emoticon:
-    tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
-    return tokens
-
-def read_tweets(jsonl_file, filename):
+class tweetflow():
     """
-    Read tweets saved in the jsonl file, preprocess the text, and save tweets in a csv and a list. These will be filtered and visualized later.
+    Class to save tweet to tsv, and clean tweet in order to produce bar graphs of frequent words for initial analysis.
+    The cleaning doesn't necessarily belong here, but here it is due to the way I've built this pipeline.
     """
 
-    path = "/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data"
-    os.chdir(path)
+    def __init__(self, filename, tokens_re, emoticon_re, excess_symbols):
+        """Initiate instance of tweet jsonl."""
 
-        # Create an array to hold the content of the tweets.
-    terms_in_tweets = []
-    tweet_list = []
-    tweet_date = []
-    tweet_likes = []
-    tweet_RT = []
-    # Read and process tweets. See above functions
-    with open(jsonl_file,'r') as infile:
-        for line in infile:
-            tweet = json.loads(line)
-            # print(tweet['full_text'], "\n")
-            tweet_list.append(tweet['text'])
-            tweet_date.append(tweet['created_at'])
-            tweet_RT.append(tweet['retweet_count'])
-            tweet_likes.append(tweet['favorite_count'])
-            processed_tweet = preprocess(tweet['text'])
-            terms_in_tweets.append(processed_tweet)
+        self.filename = filename
+        self.tokens_re = tokens_re
+        self.emoticon_re = emoticon_re
+        self.excess_symbols = excess_symbols
 
-     # Concatenate everything into one array, for filtering and basic visualization
-    terms_in_tweets = sum(terms_in_tweets, [])
+    def tokenize(self, tweet):
+        """Turn each word/symbol in the text of the tweet into a token."""
 
-    # Create dataframe to be used for time series and sentiment analysis
-    tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-    tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(filename), sep='\t')
+        # The .findall method is a part of the re library.
+        return self.tokens_re.findall(tweet)
 
-    return(terms_in_tweets)
+    def preprocess(self, tweet, lowercase = False):
+        """Tokenize the tweets, converting all to lowercase in the process"""
 
-def process_tweets(terms_in_tweets):
-    """Remove the text, tokens and symbols that interfere with analysis."""
+        tokens = tweetflow.tokenize(self, tweet)
+        # Change all tokens to lowercase, unless token is an emoticon:
+        tokens = [token if self.emoticon_re.search(token) else token.lower() for token in tokens]
+        return tokens
 
-    punctuation = list(string.punctuation)
-    stop = stopwords.words('english') + punctuation + ['rt','via','amp','h']
+    def read_tweets(self, jsonl_file):
+        """
+        Read tweets saved in the jsonl file, preprocess the text, and save tweets in a csv and a list. These will be filtered and visualized later.
+        """
 
-    tweet_content = [term for term in terms_in_tweets
-                    if term not in stop and not term.startswith(('#', '@'))]
+        path = "/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data"
+        os.chdir(path)
 
-    hashtags = [term for term in terms_in_tweets if term.startswith('#')]
+            # Create an array to hold the content of the tweets.
+        terms_in_tweets = []
+        tweet_list = []
+        tweet_date = []
+        tweet_likes = []
+        tweet_RT = []
+        username = []
+        # Read and process tweets. See above functions
+        with open(jsonl_file,'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                try: 
+                    if 'retweeted_status' in tweet:
+                    
+                        #tweet_list.append(tweet['retweeted_status']['extended_tweet']['full_text'])
+                        #processed_tweet = tweetflow.preprocess(self, tweet['retweeted_status']['extended_tweet']['full_text'])
+                        tweet_list.append(tweet['text'])
+                        processed_tweet = tweetflow.preprocess(self, tweet['text'])
+                    else:
+                        tweet_list.append(tweet['extended_tweet']['full_text'])
+                        processed_tweet = tweetflow.preprocess(self, tweet['extended_tweet']['full_text'])
+                except KeyError as e:
+                    print("Key error:", e)
 
-    # remove all non-alphanumeric content from the words:
-    tweet_content = [text for text in tweet_content if not excess_symbols.search(text)]
+                tweet_date.append(tweet['created_at'])
+                tweet_RT.append(tweet['retweet_count'])
+                tweet_likes.append(tweet['favorite_count'])
+                username.append(tweet['user']['screen_name'])
+                # add in user column
+                terms_in_tweets.append(processed_tweet)
 
-    return(tweet_content, hashtags)
+         # Concatenate everything into one array, for filtering and basic visualization
+        terms_in_tweets = sum(terms_in_tweets, [])
+
+        # Create dataframe to be used for time series and sentiment analysis
+        tweet_dataframe = pd.DataFrame({'username': username, 'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
+        tweet_dataframe.to_csv('{0}_converted_tweets.tsv'.format(self.filename), sep='\t', index = False)
+
+        return(terms_in_tweets)
+
+    def process_tweets(self, terms_in_tweets):
+        """Remove the text, tokens and symbols that interfere with analysis."""
+
+        punctuation = list(string.punctuation)
+        stop = stopwords.words('english') + punctuation + ['rt','via','amp','h']
+
+        tweet_content = [term for term in terms_in_tweets
+                        if term not in stop and not term.startswith(('#', '@'))]
+
+        hashtags = [term for term in terms_in_tweets if term.startswith('#')]
+
+        # remove all non-alphanumeric content from the words:
+        tweet_content = [text for text in tweet_content if not self.excess_symbols.search(text)]
+
+        return(tweet_content, hashtags)
 
 class visualize():
     """Basic visualization of twitter data."""
@@ -136,7 +164,7 @@ class visualize():
 
         #https://plot.ly/matplotlib/bar-charts/ as reference
         # Sign in to plotly
-        py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
+        #py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
         common_terms = self.word_frequency()
         labels, freq = zip(*common_terms)
         indexes = np.arange(len(labels))
@@ -144,11 +172,12 @@ class visualize():
         tweet_figure, axis = plt.subplots(figsize=(17, 10)) # figsize allows me to save with compatible proportions
         axis.bar(indexes, freq, width, align = 'center')
         axis.set_xticks(indexes)
-        axis.set_xticklabels(((labels)) , rotation = 55)
+        font = {'fontsize': 14}
+        axis.set_xticklabels(((labels)), fontdict = font, rotation = 55)
         axis.set_xlabel('Terms used')
         axis.set_ylabel('Frequency of terms')
         axis.set_title('{0} usage in tweets using {1}'.format(self.name, self.filename))
-        tweet_figure.savefig('{0}_{1}.png'.format(self.name, self.filename), bbox_inches = 'tight')  
+        tweet_figure.savefig('{0}_{1}.png'.format(self.filename, self.name), bbox_inches = 'tight')  
         plt.show()
         plt.close()
         
@@ -157,50 +186,54 @@ class visualize():
         #url = py.plot_mpl(tweet_figure, filename = "tweet_frequency")
 
 
-# @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
-# The following code will propose a pre-processing chain that will consider
-# these aspects of the language.
+if __name__ == '__main__':
+    # Set up regex variables
+    # @-mentions, emoticons, URLs and #hash-tags are not recognised as single tokens.
+    # The following code will propose a pre-processing chain that will consider
+    # these aspects of the language.
 
-emoticons_str = r"""
-    (?:
-        [:=;] # Eyes
-        [oO\-]? # Nose (optional)
-        [D\)\]\(\]/\\OpP] # Mouth
-    )"""
+    emoticons_str = r"""
+        (?:
+            [:=;] # Eyes
+            [oO\-]? # Nose (optional)
+            [D\)\]\(\]/\\OpP] # Mouth
+        )"""
 
-regex_str = [
-    emoticons_str,
-    r'<[^>]+>', # HTML tags
-    r'(?:@[\w_]+)', # @-mentions
-    r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
-    r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
-    r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
-    r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
-    r'(?:[\w_]+)', # other words
-    r'(?:\S)' # anything else
-]
-
-regex_str_remove = [
-    #r'[^\x00-\x7F]+' # Apparently this removes any non ascii characters.
-    r'[^\w ]' # removes all non alphanumeric stuffs (except spaces). [^\w #/] will leave or other special cases
-    #https://stackoverflow.com/questions/1219915/regex-to-remove-apostrophe
+    regex_str = [
+        emoticons_str,
+        r'<[^>]+>', # HTML tags
+        r'(?:@[\w_]+)', # @-mentions
+        r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
+        r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
+        r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
+        r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
+        r'(?:[\w_]+)', # other words
+        r'(?:\S)' # anything else
     ]
 
-#Regular expression variables
-tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
-emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
-excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
-# My regex setup in this has some redundancy but is working for now.
+    regex_str_remove = [
+        #r'[^\x00-\x7F]+' # Apparently this removes any non ascii characters.
+        r'[^\w ]', # removes all non alphanumeric stuffs (except spaces). [^\w #/] will leave or other special cases
+        r'[^\x00-\x7F]+'
 
-if __name__ == '__main__':
+        #https://stackoverflow.com/questions/1219915/regex-to-remove-apostrophe
+        ]
+
+    #Regular expression variables
+    tokens_re = re.compile(r'('+'|'.join(regex_str)+')', re.VERBOSE | re.IGNORECASE)
+    emoticon_re = re.compile(r'^'+emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+    excess_symbols = re.compile(r'('+'|'.join(regex_str_remove)+')', re.VERBOSE | re.IGNORECASE)  # Establish regex object of symbols to be removed. Accessed in preprocess function
+    # My regex setup in this has some redundancy but is working for now.
+
     # initiate parser in order to read in filename to analyze. 
     parser = get_parser()
     args = parser.parse_args()
     #Initiate data processing and visualization
     filename = convert_name(args.filename)
-    tweets = read_tweets(args.filename, filename)# Lookup file
+    tweet_processing = tweetflow(filename, tokens_re, emoticon_re, excess_symbols)
+    tweets = tweet_processing.read_tweets(args.filename)# Lookup file
     # Index 0 holds the words of the tweet; index 1 holds the dataframe.
-    processed_tweets = process_tweets(tweets)
+    processed_tweets = tweet_processing.process_tweets(tweets)
 
     common_words = visualize(processed_tweets[0], "Term", filename)
     common_words.visualize_term_usage()

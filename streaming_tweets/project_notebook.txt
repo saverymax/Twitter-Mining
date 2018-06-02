@@ -1,39 +1,41 @@
 Current work: 
-4-28-18
 
-well the issue is that I can't save it right after I have dropped na values... 
-which was actually an issue before. So it will work if I dropna before running. 
+search for conservative, black, white
+compare users, timeseries of topics, of word usage
 
-legend using topic modeling and see ref in py script from max guy
+improve sentiment analysis, try diff algo
 
-explore topics. netork of coocurring words. see tidytextmining
-viz word frequency per topic
+working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet
+   
+also don't know why I keep getting extended key error. I did know then I forgot
 
-look more at only a few topics
+topic modeling:
 
-try using Pipeline (see week 12)
+would be nice to choose topics in command line for py script
+
+save frequency charts with unique name/method
+    and tsne name with method
+        just so I can save unique charts
+
+do some of this stuff:
+https://www.tidytextmining.com/twitter.html
+
+
+filtering:
+
+remove spanish, or at least spanish stopwords
 
 lemmatization! change roots with WordNetLemmatizer()
+or snowball?
+here's the difference https://nlpforhackers.io/stemmers-vs-lemmatizers/
+
+https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
 how to do all n, v, a etc
 https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
 https://stackoverflow.com/questions/32957895/wordnetlemmatizer-not-returning-the-right-lemma-unless-pos-is-explicit-python
 https://stackoverflow.com/questions/25534214/nltk-wordnet-lemmatizer-shouldnt-it-lemmatize-all-inflections-of-a-word
 basically have to determine which part of speech word is part of and then stem based on that
 
-but
-do I want retweets?
-    could put include_rts=False... don't know where this goes for streaming
-    https://stackoverflow.com/questions/28113266/tweepy-include-rts-not-working
-
-    for tweet_info in tweepy.Cursor(api.search, q=query, lang = ‘en’,       
-    tweet_mode=‘extended’).items(100):
-    if ‘retweeted_status’ in dir(tweet_info):
-    tweet=tweet_info.retweeted_status.full_text
-    else:
-    tweet=tweet_info.full_text
-
-    oh here: 
-    https://stackoverflow.com/questions/29588177/save-full-text-of-a-tweet-with-tweepy
 
 4-9-18
 tried to run stream for an hour, got error:
@@ -45,13 +47,14 @@ but see here for more permanent fix
 
 problem: "limit in data found"
 deal with rate limits
-
-make paths soft and flexible :)
-
-search for phrases:
-https://stackoverflow.com/questions/45653430/how-do-i-do-an-exact-phrase-search-on-python-using-the-twitter-api
+here:
+http://docs.tweepy.org/en/v3.5.0/code_snippet.html
+	see handling rate limits
 
 
+Refs:
+
+topic modeling:
 https://www.machinelearningplus.com/nlp/topic-modeling-python-sklearn-examples/
     good example of lda + grid search  + other stuff in python
 http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
@@ -76,8 +79,6 @@ https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and
     tsne/pca tutorial
 also see refs in trump dir.
 
-
-refs:
 overwriting listener class:
 use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
 http://badhessian.org/2012/10/collecting-real-time-twitter-data-with-the-streaming-api/
@@ -87,4 +88,8 @@ https://developer.twitter.com/en/docs/basics/rate-limiting
 
 extended tweets:
 https://stackoverflow.com/questions/45242423/tweepy-stream-listener-for-extended-tweets
+
+plotly tsne legend
+https://github.com/minimaxir/pokemon-3d/blob/master/pokemon_3d_plotly.ipynb
+
 

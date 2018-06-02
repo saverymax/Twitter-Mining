@@ -31,10 +31,10 @@ def time_series(tweet_dataframe):
     time_series_figure.savefig("{0}.png".format("time_series"), bbox_inches = 'tight') 
     plt.close()
 
-path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
+path = '/home/timor/Documents/Git/Twitter-Mining/trump/data'
 os.chdir(path)
 
-tweet_data = pd.read_csv("converted_tweets_sentiment.tsv", sep = '\t', parse_dates=[2]) # Neccessary to parse_dates to put in format that can be read and plotted.
+tweet_data = pd.read_csv("sentiment_converted_tweets.tsv", sep = '\t', parse_dates=[1]) # Neccessary to parse_dates to put in format that can be read and plotted. The parse_dates index indicates the index in the pd df where the dates can be found
 
 # print(type(tweet_data['date'][2])) # confirms that date is a <class 'pandas.tslib.Timestamp'> 
 time_series(tweet_data)

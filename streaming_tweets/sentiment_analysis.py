@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import numpy as np
 from textblob import TextBlob
 import argparse
 import re
@@ -9,7 +10,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer as WNL
 
 """
-Sentiment analysis on time series data
+Process tsv containing tweets. Perform sentiment analysis on data.
 Call from commandline: python sentiment_analysis.py --file file.tsv
 """
 
@@ -40,28 +41,33 @@ class process_tweet():
 
         print("Beginning filtering")    
 
-        
         # First things first convert to lowercase
-        self.tweet_dataframe['filtered_text'] = self.tweet_dataframe['text'].str.lower()
+        self.tweet_dataframe['filtered_text'] = self.tweet_dataframe.loc[:, 'text'].str.lower()
+
+        # Generate all the things I want to strip away
         non_ascii = r'[^\x00-\x7F]+'
         excess_symbols = '[^\w ]+'
         digits = r'\d+'
-        stopwords = r'(rt|trump|fbi|raid|mueller|nda|cohen|corruption|corrupt|stormy|amp)'
-        #hashtags = r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)" # hash-tags
-        #at_mentions = r'(?:@[\w_]+)' # @-mentions. My decision is to leave these in the tweets and just remove the # and @
+        #stopwords = r'(rt|trump|fbi|raid|mueller|nda|cohen|corruption|corrupt|stormy|amp)'
+        excess_words = r'(rt|liberal|amp)' 
+
+        #hashtags = r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)"
+        #at_mentions = r'(?:@[\w_]+)' 
         tweet_urls = r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+' # URLs
         #patterns = re.compile('('+hashtags+'|'+at_mentions+'|'+tweet_urls+'|'+excess_symbols+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
-        patterns = re.compile('('+non_ascii+'|'+tweet_urls+'|'+excess_symbols+'|'+digits+'|'+stopwords+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
+
+        patterns = re.compile('('+non_ascii+'|'+tweet_urls+'|'+excess_symbols+'|'+digits+'|'+excess_words+')') # Putting excess_symbols in last is kind of a hack because order matters in this function so excess_symbols won't be removed until everything else is. 
         
         # List comprehension way to clean tweet 
         self.tweet_dataframe['filtered_text'] = [patterns.sub('', tweet['filtered_text']) for index, tweet in self.tweet_dataframe.iterrows()]  #clean tweet
-
-        # Safe way to clean tweet: 
-        #for index, tweet in self.tweet_dataframe.iterrows():
-        #    try:
-        #        self.tweet_dataframe['filtered_text'][index] = patterns.sub('', tweet['filtered_text'])
-        #    except Exception as e:
         
+        # And replace all the now blank spaces with np.nan
+        self.tweet_dataframe['filtered_text'] = self.tweet_dataframe['filtered_text'].replace(r'^\s*$', np.nan, regex = True)
+        
+        # Now remove those np.nans
+        #print(self.tweet_dataframe['filtered_text'].isnull().sum())
+        self.tweet_dataframe = self.tweet_dataframe.dropna()
+
         # Remove all non-english words...
         # Gets rid of too much though I think 
         #words = set(nltk.corpus.words.words())
@@ -71,8 +77,10 @@ class process_tweet():
         #    sentences.append(sentence)
     
         #self.tweet_dataframe.loc[:, 'filtered_text'] = pd.Series(sentences) 
-
-        #Lemmatization
+    def lemmatization(self):
+        """
+        Lemmatize all tweets. This invlolves stemming nouns and verbs.
+        """
         # https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
         # could do a thing where I figure out if n v a beforehand and check. see ref
         print("Beginning lemmatization")
@@ -92,11 +100,8 @@ class process_tweet():
 
         self.tweet_dataframe['filtered_text'] = pd.Series(sentences) 
         # Drop any tweets that are blank after cleaning
-        #print(self.tweet_dataframe.isnull().sum())
         self.tweet_dataframe.dropna(inplace = True)
-        #print(self.tweet_dataframe.isnull().sum())
-        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t', index = False)
-        return(tweet_dataframe)
+        print(self.tweet_dataframe.isnull().sum())
     
     def process_sentiment(self):
         """Analyze sentiment with Textblob library. Dataframe must be filtered before this method is called."""
@@ -106,9 +111,19 @@ class process_tweet():
         self.tweet_dataframe['polarity'] = [i.polarity for i in tweet_sentiment]
         
         self.tweet_dataframe['subjectivity'] = [i.subjectivity for i in tweet_sentiment]
-        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t', index = False)
 
-    
+        process_tweet.save_dataframe(self)
+
+    def save_dataframe(self): 
+        """
+        Save the dataframe
+        """
+
+        print("Saving...")
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t', index = False)
+        #self.tweet_dataframe.to_csv('test_5.tsv', sep = '\t', index = False)
+
+
 if __name__ == '__main__':
     # initiate parser in order to read in filename to analyze. 
     parser = get_parser()
@@ -118,6 +133,7 @@ if __name__ == '__main__':
     os.chdir(path)
 
     tweet_dataframe = pd.read_csv(args.filename, sep='\t')
+
     # fix for reading large tsv: https://github.com/pandas-dev/pandas/issues/11166
     
     # to diagnose issue:
@@ -131,11 +147,9 @@ if __name__ == '__main__':
     #            linenumber += 1
     #    except Exception as e:
     #        print("Error is at line {0}: {1}".format(linenumber, e))
-            
-    print(tweet_dataframe.isnull().sum())
+    #print(tweet_dataframe.isnull().sum())
     analysis = process_tweet(tweet_dataframe, args.filename)
      
     analysis.filter_tweet()
- 
-    # can't do sentiment analysis on floats and there is a float in my tweets
-    # analysis.process_sentiment()
+    analysis.save_dataframe() 
+    #analysis.process_sentiment()

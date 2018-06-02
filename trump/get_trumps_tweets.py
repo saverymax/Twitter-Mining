@@ -21,14 +21,14 @@ api = tweepy.API(auth)
 
 def users_tweets(user,quantity):
     
-    path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets' # Path has to be complete
+    path = '/home/timor/Documents/Git/Twitter-Mining/trump/data' # Path has to be complete
     os.chdir(path)
     
 
     # Save a file as .jsonl that will be processed later. 'a' will add to file, w+ will writ over existing file, if I want to update. 
-    with open('trumps_tweets.jsonl', 'w') as outfile: 
+    with open('{}.jsonl'.format(user), 'w') as outfile: 
     #make initial request for most recent tweets (200 is the maximum allowed count)
-        for tweet in tweepy.Cursor(api.user_timeline, screen_name = user).items(int(quantity)):  
+        for tweet in tweepy.Cursor(api.user_timeline, screen_name = user, tweet_mode = 'extended').items(int(quantity)):  
             outfile.write(json.dumps(tweet._json)+"\n") # the .__json method is a method of the Status class
 
 if __name__ == '__main__':

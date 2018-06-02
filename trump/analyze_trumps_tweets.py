@@ -39,7 +39,7 @@ def preprocess(tweet, lowercase = False):
 def read_tweets():
     """Read tweets saved in the jsonl file, preprocess the text, and save tweets in a csv and a list. These will be filtered and visualized later."""
 
-    path = '/home/timor/Documents/Git/Twitter-Mining/trump/trumps_tweets'
+    path = '/home/timor/Documents/Git/Twitter-Mining/trump/data'
     os.chdir(path)
 
         # Create an array to hold the content of the tweets.
@@ -49,14 +49,14 @@ def read_tweets():
     tweet_likes = []
     tweet_RT = []
     # Read and process tweets. See above functions
-    with open('trumps_tweets.jsonl','r') as infile:
+    with open('realDonaldTrump.jsonl','r') as infile:
         for line in infile:
             tweet = json.loads(line)
-            tweet_list.append(tweet['text'])
+            tweet_list.append(tweet['full_text'])
             tweet_date.append(tweet['created_at'])
             tweet_RT.append(tweet['retweet_count'])
             tweet_likes.append(tweet['favorite_count'])
-            processed_tweet = preprocess(tweet['text'])
+            processed_tweet = preprocess(tweet['full_text'])
             terms_in_tweets.append(processed_tweet)
 
      # Concatenate everything into one array, for filtering and basic visualization
@@ -64,7 +64,7 @@ def read_tweets():
 
     # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/trumps_tweets/converted_tweets.tsv',sep='\t')
+    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/data/converted_tweets.tsv',sep='\t')
 
     return(terms_in_tweets)
 

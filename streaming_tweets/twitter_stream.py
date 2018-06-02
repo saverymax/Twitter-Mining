@@ -61,10 +61,6 @@ class MyStreamListener(tweepy.StreamListener):
             
             try:
                 # If statements are necessary to deal with deleted tweets and tweet limit that prevent tweet from being added to jsonl
-                if "extended_tweet" in data:
-                    tweet = data['extended_tweet']['full_text']
-                    print(tweet)
-
                 if "delete" in data:
                     print("deleted tweet found")
                     pass
@@ -73,13 +69,30 @@ class MyStreamListener(tweepy.StreamListener):
                     print("limit in data found")
                     pass
 
-                else:
+                elif 'retweeted_status' in data:
+                    tweet = data['retweeted_status']['extended_tweet']['full_text']
+                    print(tweet, "\n")
+
                     with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
                         outfile.write(json.dumps(data) + "\n")
 
+                elif "extended_tweet" in data:
+                    tweet = data['extended_tweet']['full_text']
+                    print(tweet)
+
+                    with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
+                        outfile.write(json.dumps(data) + "\n")
+
+                else:
+                    pass
+ 
             except BaseException as e:
                 print("Error in method on_data: {}".format(e))
-                time.sleep(5) 
+                time.sleep(1) 
+            
+            except tweepy.TweepError as e:
+                print("Tweepy error:".format(e))
+                time.sleep(1)
             
             return True # Return true to keep stream flowing
 
