@@ -64,7 +64,7 @@ def read_tweets():
 
     # Create dataframe to be used for time series and sentiment analysis
     tweet_dataframe = pd.DataFrame({'text': tweet_list, 'retweets': tweet_RT, 'likes': tweet_likes, 'date': tweet_date})
-    tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/data/converted_tweets.tsv',sep='\t')
+    #tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/trump/data/converted_tweets.tsv',sep='\t')
 
     return(terms_in_tweets)
 
@@ -117,13 +117,15 @@ class visualize():
         labels, freq = zip(*common_terms)
         indexes = np.arange(len(labels))
         width = .7
-        tweet_figure, axis = plt.subplots(figsize=(17, 10)) # figsize allows me to save with compatible proportions
+        tweet_figure, axis = plt.subplots(figsize=(20, 10)) # figsize allows me to save with compatible proportions
         axis.bar(indexes, freq, width, align = 'center')
         axis.set_xticks(indexes)
-        axis.set_xticklabels(((labels)) , rotation = 55)
-        axis.set_xlabel('Terms used')
-        axis.set_ylabel('Frequency of terms')
-        axis.set_title('Term usage of Trump')
+        font = {'fontsize': 14}
+        axis.set_xticklabels(((labels)), fontdict = font, rotation = 55)
+        axis.tick_params(labelsize = 17)
+        axis.set_xlabel('Terms used', fontsize = 20)
+        axis.set_ylabel('Frequency of terms', fontsize = 20)
+        axis.set_title('Term usage of Trump', fontsize = 22)
         tweet_figure.savefig('{0}.png'.format(self.name), bbox_inches = 'tight') # not saving correctly
         plt.show()
         plt.close()
