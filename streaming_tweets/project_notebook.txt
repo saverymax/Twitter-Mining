@@ -9,16 +9,14 @@ working on deciding how to handle retweets, extended text. If i get extended rt,
    
 also don't know why I keep getting extended key error. I did know then I forgot
 
+
 topic modeling:
 
-would be nice to choose topics in command line for py script
+would be nice to choose topic# in command line for py script
 
 save frequency charts with unique name/method
     and tsne name with method
         just so I can save unique charts
-
-do some of this stuff:
-https://www.tidytextmining.com/twitter.html
 
 
 filtering:
@@ -55,6 +53,7 @@ http://docs.tweepy.org/en/v3.5.0/code_snippet.html
 Refs:
 
 topic modeling:
+
 https://www.machinelearningplus.com/nlp/topic-modeling-python-sklearn-examples/
     good example of lda + grid search  + other stuff in python
 http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
@@ -77,7 +76,6 @@ https://www.tidytextmining.com/topicmodeling.html
     both are good to see what I can do with topic modeling and viz
 https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b
     tsne/pca tutorial
-also see refs in trump dir.
 
 overwriting listener class:
 use: http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
