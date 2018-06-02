@@ -88,7 +88,7 @@ def time_series(tweet_dataframe):
     fig.append_trace(likes_data, 1, 1)
     fig.append_trace(polarity_data, 2, 1)
     fig.append_trace(subjectivity_data, 2, 1)
-    plot_url = py.plot(fig) 
+    plot_url = py.plot(fig, filename = 'trump_series_early2018.html') 
 
 def normalize_data(column_name):
     """Normalize columns in the tweet data, particularly because polarity and subjectivity and are on two different scales."""
