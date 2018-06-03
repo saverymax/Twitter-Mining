@@ -33,6 +33,16 @@ def get_parser():
     parser.add_argument("--path", 
                         dest = "filename", 
                         help = "The path to the file to be analyzed. Something like /home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/tweets_converted.tsv")
+
+    parser.add_argument("--dir", 
+                        dest = "stream_dir", 
+                        help = "The directory to save the figures.")
+    
+    parser.add_argument("--topics", 
+                        dest = "n_topics", 
+                        help = "The number of topics to use in the model.",
+                        type = int)
+
     return parser
 
 
@@ -41,7 +51,7 @@ class topic_modeling():
     Class that contains topic modeling and visualization methods.
     """
 
-    def __init__(self, dataframe, filename):
+    def __init__(self, dataframe, filename, stream_dir):
         """
         Initiate an instance.
         Must pass the whole dataframe, and individual columns to initiate. This is unnecessary, but to generate a legend, 
@@ -50,6 +60,8 @@ class topic_modeling():
 
         self.dataframe = dataframe
         self.filename = filename
+        self.stream_info = topic_modeling.split_filename(self)
+        self.stream_dir = stream_dir
 
     def nmf_analysis(self, n_topics):
         """
@@ -135,12 +147,24 @@ class topic_modeling():
         plt.tight_layout(w_pad=.2, h_pad=1)
         plt.show()
         fig.savefig(
-                    '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/word_frequencies_topic_{}.png'.format(topic_n)
+                    '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}/{1}_word_frequencies_topic_{2}.png'.format(self.stream_dir, self.stream_info, topic_n + 1)
                     )
         plt.close()
 
         return(topics)
-    
+
+
+    def drop_tweets(self, probabilities):
+        """
+        Remove all tweets that have a low probability of being in all topics
+        """
+
+        print("Dropping tweets...")
+        probabilities_df = pd.DataFrame(probabilities).copy()
+        probabilities_df.where(probabilities_df >.80, inplace = True)
+        probabilities_df.dropna(how='all', inplace = True)
+        self.dataframe = self.dataframe.loc[probabilities_df.index].copy()
+
     def run_tsne(self, transform):
         """
         Run tsne
@@ -170,12 +194,10 @@ class topic_modeling():
 
         print("Plotting with matplotlib...")
 
-        filename = topic_modeling.split_filename(self) 
-
         colors = plt.cm.nipy_spectral(np.linspace(0, 1, len(set(pd.Series(self.dataframe['labels'])))))
 
-        fig, ax = plt.subplots(figsize = (30, 30))
-        ax.set_title('{0} topics, {1}'.format(n_topics, filename), fontsize = 20) 
+        fig, ax = plt.subplots(figsize = (20, 10))
+        ax.set_title('{0} topics, {1}'.format(n_topics, self.stream_info), fontsize = 20) 
         
         for i, color in zip(range(len(topics)), colors):
             ax.scatter(
@@ -188,8 +210,11 @@ class topic_modeling():
         ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
         ax.legend(loc='lower center', bbox_to_anchor = (1, 0), fontsize = 20)
 
+        fig.savefig(
+                    #'{0}/{1}/{2}_topics_{3}.png'.format(self.filename, self.stream_dir, self.stream_info, n_topics))
+                    '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}/{1}_topics_{2}.png'.format(self.stream_dir, self.stream_info, n_topics)
+                    )
         plt.show()
-        fig.savefig('{0}/{1}_topics_{2}.png'.format(self.filename, n_topics, filename))
 
     def visualize_plotly(self, n_topics, topics):
         
@@ -271,25 +296,23 @@ if __name__ == '__main__':
     tweet_dataframe = pd.read_csv(args.filename, sep = '\t')
 
     # Perform analysis with NMF or LDA. Would be nice to choose from command line.
-    n_topics = 10 
+    n_topics = args.n_topics 
 
-    model = topic_modeling(tweet_dataframe, args.filename)
-
+    model = topic_modeling(tweet_dataframe, args.filename, args.stream_dir)
+     
     transformed_data_lda, topics = model.lda_analysis(n_topics)
     model.run_tsne(transformed_data_lda) 
+	
+    # If I want to plot model with only tweets most likely to be in a topic:
+    model.drop_tweets(transformed_data_lda) 
 
-    # Nice to have a saving method to save tsne data. 
-    #model.save_dataframe(args.filename)
-
-    #model.visualize_mpl(n_topics, topics)
-    
+    # NMF. Not working with dropped tweets yet
     #transformed_data_nmf, topics = model.nmf_analysis(n_topics)
     #model.run_tsne(transformed_data_nmf) 
-    #model.visualize_plotly(args.filename, n_topics, topics)
     
     # Only run if saving tsne data is necessary 
     #model.save_dataframe(args.filename)
 
     # Visualization
-    #model.visualize_mpl(args.filename, n_topics, topics)
+    #model.visualize_mpl(n_topics, topics)
     model.visualize_plotly(n_topics, topics)

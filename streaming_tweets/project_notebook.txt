@@ -1,7 +1,15 @@
 Current work: 
 
+save html plotly
+
 search for conservative, black, white
 compare users, timeseries of topics, of word usage
+
+which words lead to more retweets/likes?
+
+get most representative tweet probs to work. Maybe figure out how to get tsne to work dropping tweets before plotting
+
+make sure nmf can drop tweets with low prob
 
 improve sentiment analysis, try diff algo
 
@@ -13,10 +21,6 @@ also don't know why I keep getting extended key error. I did know then I forgot
 topic modeling:
 
 would be nice to choose topic# in command line for py script
-
-save frequency charts with unique name/method
-    and tsne name with method
-        just so I can save unique charts
 
 
 filtering:
