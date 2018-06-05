@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     tweet_data = pd.read_csv(args.filename, sep = '\t', parse_dates=[2]) # Neccessary to parse_dates to put in format that can be read and plotted.
     # Do some date revising. Round to day
-    tweet_data['date'] = tweet_data['date'] = pd.to_datetime(tweet_data['date'])
+    tweet_data['date'] = pd.to_datetime(tweet_data['date'])
 #    tweet_data = tweet_data.assign(date=tweet_data.date.dt.round('H'))
 
     tweet_data['polarity'] = normalize_data(tweet_data['polarity'])
