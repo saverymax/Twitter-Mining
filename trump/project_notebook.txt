@@ -1,5 +1,4 @@
-
-time series of topics
+tweets most rep of topics
 
 make charts nice for prsentation
     include dates with time series...
@@ -21,9 +20,6 @@ https://medium.com/tensorist/classifying-yelp-reviews-using-nltk-and-scikit-lear
 
 bag of words model:
 https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
-
-using mnb and svm, with stemming root words
-https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
 
 useful general info on ml on text:
 https://www.safaribooksonline.com/library/view/applied-text-analysis/9781491963036/ch04.html
