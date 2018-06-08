@@ -7,10 +7,10 @@ And his most common hashtags
 ![Trumps most commonly used hashtags in his 500 most recent tweets](/figures/trump_data/trump_hashtags.png)
 
 Well that's interesting but what words frequently coocur?
-![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_frequencies_topic_7.png)
+![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_network_7.png)
 
 And a slightly trimmed network:
-![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_frequencies_topic_10.png)
+![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_network_10.png)
 
 And what is going on over time? Here's an interactive time series documenting Trump's tweets and tweet metrics, from December 2017 to March 2018 
 [here](https://saverymax.github.io/Twitter-Mining/figures/trump_data/trump_time_series)
@@ -28,6 +28,7 @@ Words most representative of each topic
 ![topic words in trumps tweets](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_frequencies_topic_10.png)
 
 And word networks for a few of the topics
+
 Russia topic:
 
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_0.png)
@@ -44,9 +45,11 @@ trade and china topic:
 
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_10.png)
 
+
 Change of a few interesting words over time. Compare to plot below.
 
 ![trumps word use over time](https://saverymax.github.io/Twitter-Mining/figures/trump_data/time_series_word_frequency.png)
+
 
 Time series of the topics trump is tweeting about 
 
