@@ -16,7 +16,7 @@ And a time series from March 2017 through May
 To get an idea of what trump topics about, here is the t-SNE plot of an LDA topic model. Each point is a tweet. Hover your mouse over each point to read the text of the tweet. The legend shows the words that best represent each topic cluster. 
 
 However, since this is a relatively small data set, the LDA algorithm does not do a super great job of clustering tweets, and there are definitely some tweets that do not really belong in the cluster they have been grouped in. I'll include another plot that does not include any tweets with a low probability of being in any given cluser, sometime. 
-[See the plot here](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_model_trump)
+![See the plot here](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_model_trump)
 
 Time series of the topics trump is tweeting about 
 ![trumps topics over time](https://saverymax.github.io/Twitter-Mining/figures/trump_data/time_series_topics.png)
