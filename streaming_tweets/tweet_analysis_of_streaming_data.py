@@ -42,7 +42,8 @@ def get_parser():
 def convert_name(jsonl_file):
     """Convers filename_terms_moreterms.jsonl into terms_moreterms"""
     split_name = jsonl_file.split(".")
-    return(split_name[0])
+    stream_name = split_name[0].rsplit('/', 1)[-1]
+    return(split_name[0], stream_name)
 
 class tweetflow():
     """
@@ -93,14 +94,24 @@ class tweetflow():
                 tweet = json.loads(line)
                 try: 
                     if 'retweeted_status' in tweet:
-                    
-                        #tweet_list.append(tweet['retweeted_status']['extended_tweet']['full_text'])
+
+                        if 'extended_tweet' in tweet['retweeted_status']:
+                            tweet_list.append(tweet['retweeted_status']['extended_tweet']['full_text'])
+                            processed_tweet = tweetflow.preprocess(self, tweet['retweeted_status']['extended_tweet']['full_text'])
+
+                        else:
+                            tweet_list.append(tweet['retweeted_status']['text'])
+                            processed_tweet = tweetflow.preprocess(self, tweet['retweeted_status']['text'])
                         #processed_tweet = tweetflow.preprocess(self, tweet['retweeted_status']['extended_tweet']['full_text'])
-                        tweet_list.append(tweet['text'])
-                        processed_tweet = tweetflow.preprocess(self, tweet['text'])
                     else:
-                        tweet_list.append(tweet['extended_tweet']['full_text'])
-                        processed_tweet = tweetflow.preprocess(self, tweet['extended_tweet']['full_text'])
+
+                        if 'extended_tweet' in tweet:
+                            tweet_list.append(tweet['extended_tweet']['full_text'])
+                            processed_tweet = tweetflow.preprocess(self, tweet['extended_tweet']['full_text'])
+                        else:
+                            tweet_list.append(tweet['text'])
+                            processed_tweet = tweetflow.preprocess(self, tweet['text'])
+
                 except KeyError as e:
                     print("Key error:", e)
 
@@ -157,7 +168,7 @@ class visualize():
         common_terms = count_all.most_common(20)
         return(common_terms)
 
-    def visualize_term_usage(self):
+    def visualize_term_usage(self, stream_name):
         """Produce histogram of most frequent terms.
         Calls method word_frequency to do so.
         """
@@ -172,11 +183,12 @@ class visualize():
         tweet_figure, axis = plt.subplots(figsize=(17, 10)) # figsize allows me to save with compatible proportions
         axis.bar(indexes, freq, width, align = 'center')
         axis.set_xticks(indexes)
-        font = {'fontsize': 14}
+        font = {'fontsize': 17}
         axis.set_xticklabels(((labels)), fontdict = font, rotation = 55)
-        axis.set_xlabel('Terms used')
-        axis.set_ylabel('Frequency of terms')
-        axis.set_title('{0} usage in tweets using {1}'.format(self.name, self.filename))
+        axis.set_xlabel('Terms used', fontsize = 20)
+        axis.yaxis.set_tick_params(labelsize=14)
+        axis.set_ylabel('Frequency of terms', fontsize = 20)
+        axis.set_title('{0} usage in tweets using {1}'.format(self.name, stream_name), fontsize = 20)
         tweet_figure.savefig('{0}_{1}.png'.format(self.filename, self.name), bbox_inches = 'tight')  
         plt.show()
         plt.close()
@@ -229,13 +241,14 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
     #Initiate data processing and visualization
-    filename = convert_name(args.filename)
+    filename, stream_name = convert_name(args.filename)
+    print(filename)
     tweet_processing = tweetflow(filename, tokens_re, emoticon_re, excess_symbols)
     tweets = tweet_processing.read_tweets(args.filename)# Lookup file
     # Index 0 holds the words of the tweet; index 1 holds the dataframe.
     processed_tweets = tweet_processing.process_tweets(tweets)
 
     common_words = visualize(processed_tweets[0], "Term", filename)
-    common_words.visualize_term_usage()
+    common_words.visualize_term_usage(stream_name)
     common_hash = visualize(processed_tweets[1], "Hashtag", filename)
-    common_hash.visualize_term_usage()
+    common_hash.visualize_term_usage(stream_name)

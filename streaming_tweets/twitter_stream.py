@@ -49,8 +49,12 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         """Called when a new status arrives i.e., a new tweet that matches specified terms"""
-        #print(status.extended_tweet['text'])
-        #return(status)
+
+        print("Saving...\n")
+        
+        with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
+            outfile.write(json.dumps(status) + "\n")
+
         return True 
 
     def on_data(self, data):
@@ -69,23 +73,36 @@ class MyStreamListener(tweepy.StreamListener):
                     print("limit in data found")
                     pass
 
-                elif 'retweeted_status' in data:
-                    tweet = data['retweeted_status']['extended_tweet']['full_text']
-                    print(tweet, "\n")
+                # All this to get full text from retweets. The only problem is that I lose the RT @user info, which is annoying 
 
-                    with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
-                        outfile.write(json.dumps(data) + "\n")
+                elif 'retweeted_status' in data:
+                    if 'extended_tweet' in data['retweeted_status']:
+                        tweet = data['retweeted_status']['extended_tweet']['full_text']
+                        print("Extended retweet:", tweet, "\n")
+                        self.on_status(data) 
+                    # If retweet isn't long enough to need extended text
+                    else:
+                        tweet = data['retweeted_status']['text']
+                        print("Retweet", tweet, "\n")
+                        self.on_status(data) 
 
                 elif "extended_tweet" in data:
                     tweet = data['extended_tweet']['full_text']
-                    print(tweet)
+                    print("Extended tweet", tweet, "\n")
+                    self.on_status(data) 
 
-                    with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
-                        outfile.write(json.dumps(data) + "\n")
+                # Need this next if statement to deal with tweets that aren't long enough to need extended text.
+                elif "text" in data:
+                    print("Just 'text' of tweet okay?")
+                    tweet = data['text']
+                    print(tweet, "\n")
+                    self.on_status(data) 
 
                 else:
-                    pass
- 
+                    tweet = data
+                    print("Tweet that's something I don't understand")
+                    print(tweet, "\n")
+
             except BaseException as e:
                 print("Error in method on_data: {}".format(e))
                 time.sleep(1) 

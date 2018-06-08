@@ -13,9 +13,7 @@ make sure nmf can drop tweets with low prob
 
 improve sentiment analysis, try diff algo
 
-working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet
-   
-also don't know why I keep getting extended key error. I did know then I forgot
+working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet. right now I have a way to get full text for everything
 
 
 topic modeling:
@@ -30,6 +28,8 @@ remove spanish, or at least spanish stopwords
 lemmatization! change roots with WordNetLemmatizer()
 or snowball?
 here's the difference https://nlpforhackers.io/stemmers-vs-lemmatizers/
+
+or use spaCy
 
 https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
 how to do all n, v, a etc
