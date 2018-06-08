@@ -9,7 +9,9 @@ And his most common hashtags
 Well that's interesting but what words frequently coocur?
 ![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_network_7.png)
 
+
 And a slightly trimmed network:
+
 ![trumps coocuring words](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_network_10.png)
 
 And what is going on over time? Here's an interactive time series documenting Trump's tweets and tweet metrics, from December 2017 to March 2018 
