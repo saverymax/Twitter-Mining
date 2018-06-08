@@ -23,27 +23,33 @@ To get an idea of what trump topics about, here is the t-SNE plot of an LDA topi
 However, since this is a relatively small data set, the LDA algorithm does not do a super great job of clustering tweets, and there are definitely some tweets that do not really belong in the cluster they have been grouped in. I'll include another plot that does not include any tweets with a low probability of being in any given cluser, sometime. 
 [See the plot here](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_model_trump)
 
-To add:
 Words most representative of each topic
+
 ![topic words in trumps tweets](https://saverymax.github.io/Twitter-Mining/figures/trump_data/word_frequencies_topic_10.png)
 
 And word networks for a few of the topics
 Russia topic:
+
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_0.png)
 
 great, today, whitehouse topic
+
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_2.png)
 
 fake news topic
+
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_7.png)
 
 trade and china topic:
+
 ![topic_word_networks](https://saverymax.github.io/Twitter-Mining/figures/trump_data/topic_10.png)
 
 Change of a few interesting words over time. Compare to plot below.
+
 ![trumps word use over time](https://saverymax.github.io/Twitter-Mining/figures/trump_data/time_series_word_frequency.png)
 
 Time series of the topics trump is tweeting about 
+
 ![trumps topics over time](https://saverymax.github.io/Twitter-Mining/figures/trump_data/time_series_topics.png)
 
 
