@@ -14,4 +14,5 @@ Word network of words used together at least 100 times
 And to thin out the network a little, word network of words used together at least 200 times
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/word_network_200.png)
 
-<iframe width="560" height="315" src="/figures/streaming/20_topic_model_reduced.html" frameborder="0" allowfullscreen></iframe>
+To see what the tweets were actually about, I ran a topic model, using LDA. The words in the legend are those that best represent the topics. LDA is probabilistic, and I have included only tweets that have have a greater than 80 % chance of being in the assigned topic. Move your plot over each point to see the tweet it represents.  
+[See the plot here](https://saverymax.github.io/Twitter-Mining/figures/streaming/20_topic_model_reduced)
