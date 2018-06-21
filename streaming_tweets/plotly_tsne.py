@@ -32,10 +32,12 @@ def generate_plot(path, topics):
             [11, '#A8B820'],
             [12, '#7038F8'],
             [13, '#705898'],
-            [14, '#705848']])
-            #[15, '#B8B8D0'],
-            #[16, '#A8A878'],
-            #[17, '#EE99AC']])
+            [14, '#705848'],
+            [15, '#B8B8D0'],
+            [16, '#A8A878'],
+            [17, '#EE99AC'],
+            [18, '#ABEBC6'],
+            [19, '#B9770E']])
 
     df_palette.columns = ['labels', 'typecolor']
     tweet_dataframe.merge(df_palette, on = 'labels')
