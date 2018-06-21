@@ -39,6 +39,7 @@ president, potus, make, sessions
 
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_18.png)
 
-<iframe width="900" height="800" frameborder="0" scrolling="no" src="https://saverymax.github.io/Twitter-Mining/figures/streaming/20_topic_model_reduced.html"></iframe>
 
-So that's what twitter looked like, more or less
+
+So that's what twitter looked like, more or less, during the evening after Michael Cohen's office was raided by the FBI
+
