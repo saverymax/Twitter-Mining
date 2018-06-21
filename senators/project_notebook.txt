@@ -1,0 +1,19 @@
+
+
+
+sentiment box_plot, time series on plot with dropped data. maybe make dropdown thing?
+
+dems and repubs. drop down thing?
+
+deal with api limits. only 150 calls apparently?
+
+made app on heroku:
+congressontwitter
+
+will need to make a worker that runs the anaylsis
+and a web that runs the dash and imports the dash stuff
+
+pickle everything!
+https://github.com/plotly/dash/issues/139
+
+http://jmdaignan.com/2018/02/26/metricsdash/

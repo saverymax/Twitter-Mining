@@ -1,25 +1,24 @@
 Current work: 
 
-save html plotly
+with fbiraid stuff, so many retweets that the topic model is basically just retweets
+
+for topic model, all saving settings are set on fbi raid stuff.
+
+need to rerun json_tsv conversion for fbi stuff.
+
+get new lemmatizer to work and vader sentiment
 
 search for conservative, black, white
 compare users, timeseries of topics, of word usage
 
-which words lead to more retweets/likes?
-
-get most representative tweet probs to work. Maybe figure out how to get tsne to work dropping tweets before plotting
+which words lead to more retweets/likes? (tidy text mining)
 
 make sure nmf can drop tweets with low prob
-
-improve sentiment analysis, try diff algo
 
 working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet. right now I have a way to get full text for everything
 
 
 topic modeling:
-
-would be nice to choose topic# in command line for py script
-
 
 filtering:
 
@@ -29,7 +28,6 @@ lemmatization! change roots with WordNetLemmatizer()
 or snowball?
 here's the difference https://nlpforhackers.io/stemmers-vs-lemmatizers/
 
-or use spaCy
 
 https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
 how to do all n, v, a etc
@@ -37,21 +35,6 @@ https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-taggi
 https://stackoverflow.com/questions/32957895/wordnetlemmatizer-not-returning-the-right-lemma-unless-pos-is-explicit-python
 https://stackoverflow.com/questions/25534214/nltk-wordnet-lemmatizer-shouldnt-it-lemmatize-all-inflections-of-a-word
 basically have to determine which part of speech word is part of and then stem based on that
-
-
-4-9-18
-tried to run stream for an hour, got error:
-Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
-trying solution from here:
-https://github.com/tweepy/tweepy/issues/650
-but see here for more permanent fix
-    https://stackoverflow.com/questions/26638329/incompleteread-error-when-retrieving-twitter-data-using-python
-
-problem: "limit in data found"
-deal with rate limits
-here:
-http://docs.tweepy.org/en/v3.5.0/code_snippet.html
-	see handling rate limits
 
 
 Refs:
