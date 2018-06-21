@@ -14,3 +14,4 @@ Word network of words used together at least 100 times
 And to thin out the network a little, word network of words used together at least 200 times
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/word_network_200.png)
 
+<iframe width="560" height="315" src="/figures/streaming/20_topic_model_reduced.html" frameborder="0" allowfullscreen></iframe>
