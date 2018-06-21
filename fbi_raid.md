@@ -15,23 +15,28 @@ And to thin out the network a little, word network of words used together at lea
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/word_network_200.png)
 
 To see what the tweets were actually about, I ran a topic model, using LDA. The words in the legend are those that best represent the topics. LDA is probabilistic, and I have included only tweets that have have a greater than 80 % chance of being in the assigned topic. Move your plot over each point to see the tweet it represents.  
-[See the plot here](https://saverymax.github.io/Twitter-Mining/figures/streaming/20_topic_model_reduced)
+[See the plot here](https://saverymax.github.io/Twitter-Mining/figures/streaming/20_topic_model_reduced.html)
 
 It's interesting to see the topics, but it's more interesting to see the word networks for each topic. 
 
 offices, daniels, michael, man 
+
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_0.png)
 
 ed, like, news, michael
+
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_8.png)
 
 doj, hilary, clinton, loudobbs
+
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_14.png)
 
 tell, let, right, act, ag
+
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_17.png)
 
 president, potus, make, sessions
+
 ![Most common coocuring words on twitter during FBI raid](/figures/streaming/topic_18.png)
 
 So that's what twitter looked like, more or less
