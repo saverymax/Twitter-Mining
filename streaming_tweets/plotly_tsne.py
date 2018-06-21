@@ -92,7 +92,7 @@ if __name__ == "__main__":
     fig = dict(data=plot_list, layout=layout)
     #offline_plot.plot(fig, filename='data/topic_model.html', auto_open = True)
 
-    offline_plot.plot(fig, filename='data/topic_model.html', auto_open = True)
+    offline_plot.plot(fig, filename='data/topic_model.html', auto_open = False)
     
 
 

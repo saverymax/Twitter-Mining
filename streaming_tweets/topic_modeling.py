@@ -146,7 +146,7 @@ class topic_modeling():
             ax.set_title('Topic {}'.format(topic_n))
 
         plt.tight_layout(w_pad=.2, h_pad=1)
-        plt.show()
+        #plt.show()
 
         fig.savefig(
                     '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}/model_word_frequencies_topic_{1}.png'.format(self.stream_dir, topic_n + 1)
@@ -222,7 +222,7 @@ class topic_modeling():
         ax.legend(loc='center left', bbox_to_anchor = (1, .5), fontsize = 20)
 
 
-        plt.show()
+        #plt.show()
         fig.savefig(
                     #'{0}/{1}/{2}_topics_{3}.png'.format(self.filename, self.stream_dir, self.stream_info, n_topics))
                     'data/{0}/{1}_topics_{2}.png'.format(self.stream_dir, self.stream_info, n_topics), 

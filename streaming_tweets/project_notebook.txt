@@ -1,5 +1,7 @@
 Current work: 
 
+topic model plot not working on site. something to do with saving it with plotly_tsne.py
+
 with fbiraid stuff, so many retweets that the topic model is basically just retweets
 
 for topic model, all saving settings are set on fbi raid stuff.
