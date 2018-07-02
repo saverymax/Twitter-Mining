@@ -6,23 +6,12 @@ changed directory setup. Now, all files are named the same, but in aptly named d
 
 topic model plot not working on site. something to do with saving it with plotly_tsne.py
 
-with fbiraid stuff, so many retweets that the topic model is basically just retweets
-
 for topic model, all saving settings are set on fbi raid stuff.
 
 need to rerun json_tsv conversion for fbi stuff.
 
-get new lemmatizer to work and vader sentiment
-
 search for conservative, black, white
 compare users, timeseries of topics, of word usage
-
-which words lead to more retweets/likes? (tidy text mining)
-
-make sure nmf can drop tweets with low prob
-
-working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet. right now I have a way to get full text for everything
-
 
 
 filtering:
@@ -30,10 +19,6 @@ filtering:
 treat ' and . differently when stripping. replace with '' and ' '
 
 remove spanish, or at least spanish stopwords
-
-lemmatization! change roots with WordNetLemmatizer()
-or snowball?
-here's the difference https://nlpforhackers.io/stemmers-vs-lemmatizers/
 
 
 https://towardsdatascience.com/machine-learning-nlp-text-classification-using-scikit-learn-python-and-nltk-c52b92a7c73a
