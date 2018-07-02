@@ -1,9 +1,11 @@
-## Visualizing tweets 
+## What's up, Twitter?
 
-This project site documents my work using twitter to explore the thoughts, beliefs, feelings, and actions of the people that compose social networks. As of 3-14-2018, I'm just getting started putting together the project site and building the workflows necessary for large-scale analyses.
+This project site documents my work using twitter to explore chaos that is Twitter and the people that compose social networks. I'm still getting started putting together the site and building pipelines.
 
 [Trumps Twitter habits](trump)
 
 [Twitter for an hour during the evening after the FBI raid of Michael Cohen's New York office](fbi_raid)
 
-Current work: Improving sentiment analysis, and topic modeling
+And an app that tracks [Congress's activity on Twitter](https://congressontwitter.herokuapp.com/)
+
+Current work: Making more bots, apps, expanding to other social media sites, refining some features of the topic model, designing more time series, and following the chaos on twitter/national politics. 
