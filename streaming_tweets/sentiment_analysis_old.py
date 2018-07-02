@@ -1,21 +1,17 @@
 #!/usr/bin/env python3
-import argparse
 import numpy as np
+from textblob import TextBlob
+import argparse
 import re
 import string
 import pandas as pd
 import os
 import nltk
 from nltk.stem import WordNetLemmatizer as WNL
-from nltk.corpus import wordnet
-from nltk.tokenize import word_tokenize
-from nltk import pos_tag
 
 """
-Process tsv containing tweets. 
-In command line, in --dir argument, include the directory the stream is located in. All files are named the same.
-Example to run:
-python tweet_cleaner.py --dir liberal
+Process tsv containing tweets. Perform sentiment analysis on data.
+Call from commandline: python sentiment_analysis.py --file file.tsv
 """
 
 def get_parser():
@@ -26,21 +22,19 @@ def get_parser():
     """
 
     parser = argparse.ArgumentParser(description = "Twitter stream") 
-    parser.add_argument("--dir", 
-                        dest = "directory", 
-                        help = "Input the directory descriptive part of the stream")
+    parser.add_argument("--file", 
+                        dest = "filename", 
+                        help = "The file to be analyzed")
     return parser
 
 class process_tweet():
     """Clean tweet and analyze text"""
 
-    def __init__(self, directory):
+    def __init__(self, tweet_dataframe, filename):
         """initiate instance of tweet text to be analyzed""" 
-
-        tweet_dataframe = pd.read_csv('data/{}/converted_tweets.tsv'.format(directory), sep='\t', engine = 'python')
-
-        self.directory = directory 
+         
         self.tweet_dataframe = tweet_dataframe
+        self.filename = filename
 
     def filter_tweet(self):
         """Remove chosen elements from tweets. Depending on hardcoded values, this might be hashtags, @mentions, urls, or all non-alphanumeric characters."""
@@ -55,7 +49,7 @@ class process_tweet():
         excess_symbols = '[^\w ]+'
         digits = r'\d+'
         #stopwords = r'(rt|trump|fbi|raid|mueller|nda|cohen|corruption|corrupt|stormy|amp)'
-        excess_words = r'(^rt|amp)' 
+        excess_words = r'(rt|liberal|amp)' 
 
         #hashtags = r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)"
         #at_mentions = r'(?:@[\w_]+)' 
@@ -73,65 +67,52 @@ class process_tweet():
         # Now remove those np.nans
         #print(self.tweet_dataframe['filtered_text'].isnull().sum())
         self.tweet_dataframe = self.tweet_dataframe.dropna()
-        self.tweet_dataframe.reset_index(drop = False, inplace = True)
 
+        # Remove all non-english words...
+        # Gets rid of too much though I think 
+        #words = set(nltk.corpus.words.words())
+        #sentences = []
+        #for tweet in self.tweet_dataframe['filtered_text']:
+        #    sentence = " ".join(w for w in nltk.wordpunct_tokenize(tweet) if w in words) #or not w.isalpha())
+        #    sentences.append(sentence)
+    
+        #self.tweet_dataframe.loc[:, 'filtered_text'] = pd.Series(sentences) 
     def lemmatization(self):
         """
-        Lemmatize all tweets. This invlolves all parts of speech.
+        Lemmatize all tweets. This invlolves stemming nouns and verbs.
         """
         # https://stackoverflow.com/questions/15586721/wordnet-lemmatization-and-pos-tagging-in-python
         # could do a thing where I figure out if n v a beforehand and check. see ref
         print("Beginning lemmatization")
-        wnl = WNL()
-        new_tweets = []
-
-        for tweet in self.tweet_dataframe['filtered_text']:
-
+        tweet_lemmatizer = WNL()
+        sentences = []
+        line = 0
+        for i in self.tweet_dataframe['filtered_text']:
             try: 
-                tokenized_sentence = word_tokenize(tweet)
-                pos_tag_sentence = pos_tag(tokenized_sentence)
-
-                new_sentence = []
-
-                for i in pos_tag_sentence:
-                    tag = self.get_wordnet_pos(i[1])
-
-                    # words like to and and don't need to be lemmatized and return ""
-                    if tag != "":
-                        word = wnl.lemmatize(i[0], tag)
-                        new_sentence.append(word)
-                    # and to, and, and other words
-                    else:
-                        new_sentence.append(i[0])
-                #print(new_sentence, "\n") 
-                new_sentence = " ".join(new_sentence)
-                new_sentence = new_sentence.replace('\n','')
-                new_tweets.append(new_sentence)
-                #print(new_sentence,"\n")
+                sentence = i.split()
+                sentence = [tweet_lemmatizer.lemmatize(j, pos = 'v') for j in sentence]
+                #sentence = [tweet_lemmatizer.lemmatize(j, pos = 'n') for j in sentence]
+                sentences.append(" ".join(sentence))
 
             except Exception as e:
-                print("Error: {0}".format(e))
+                print("Error: {0}, line: {1}".format(e, line))
+            line += 1
+
+        self.tweet_dataframe['filtered_text'] = pd.Series(sentences) 
+        # Drop any tweets that are blank after cleaning
+        self.tweet_dataframe.dropna(inplace = True)
+        print(self.tweet_dataframe.isnull().sum())
+    
+    def process_sentiment(self):
+        """Analyze sentiment with Textblob library. Dataframe must be filtered before this method is called."""
+
+        print("Beginning sentiment analysis")
+        tweet_sentiment = [TextBlob(tweet['filtered_text']).sentiment for index, tweet in self.tweet_dataframe.iterrows()] 
+        self.tweet_dataframe['polarity'] = [i.polarity for i in tweet_sentiment]
         
-        self.tweet_dataframe['filtered_text'] = pd.Series(new_tweets)
+        self.tweet_dataframe['subjectivity'] = [i.subjectivity for i in tweet_sentiment]
 
-        #self.tweet_dataframe['filtered_text'] = self.tweet_dataframe['filtered_text'].replace(r'^\s*$', np.nan, regex = True)
-
-        #self.tweet_dataframe = self.tweet_dataframe.dropna()
-
-    def get_wordnet_pos(self, treebank_tag):
-        """Get the pos tag in wordnet version"""
-
-        # pos_tag uses treebank corpus
-        if treebank_tag.startswith('J'):
-            return wordnet.ADJ
-        elif treebank_tag.startswith('V'):
-            return wordnet.VERB
-        elif treebank_tag.startswith('N'):
-            return wordnet.NOUN
-        elif treebank_tag.startswith('R'):
-            return wordnet.ADV
-        else:
-            return ''
+        process_tweet.save_dataframe(self)
 
     def save_dataframe(self): 
         """
@@ -139,18 +120,36 @@ class process_tweet():
         """
 
         print("Saving...")
-        self.tweet_dataframe.to_csv('data/{}/filtered_tweets.tsv'.format(self.directory), sep='\t', index = False)
+        self.tweet_dataframe.to_csv('~/Documents/Git/Twitter-Mining/streaming_tweets/data/{}'.format(self.filename), sep='\t', index = False)
         #self.tweet_dataframe.to_csv('test_5.tsv', sep = '\t', index = False)
+
 
 if __name__ == '__main__':
     # initiate parser in order to read in filename to analyze. 
     parser = get_parser()
     args = parser.parse_args()
    
-    #path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data'
-    #os.chdir(path)
+    path = '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data'
+    os.chdir(path)
 
-    cleaner = process_tweet(args.directory) 
-    cleaner.filter_tweet()
-    cleaner.lemmatization()
-    cleaner.save_dataframe()
+    tweet_dataframe = pd.read_csv(args.filename, sep='\t')
+
+    # fix for reading large tsv: https://github.com/pandas-dev/pandas/issues/11166
+    
+    # to diagnose issue:
+    #import csv
+    #
+    #with open(args.filename, "r") as infile:
+    #    read = csv.reader(infile)
+    #    linenumber = 1
+    #    try: 
+    #        for row in read:
+    #            linenumber += 1
+    #    except Exception as e:
+    #        print("Error is at line {0}: {1}".format(linenumber, e))
+    #print(tweet_dataframe.isnull().sum())
+    analysis = process_tweet(tweet_dataframe, args.filename)
+     
+    analysis.filter_tweet()
+    analysis.save_dataframe() 
+    #analysis.process_sentiment()

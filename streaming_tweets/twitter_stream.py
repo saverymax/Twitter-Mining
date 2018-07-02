@@ -32,6 +32,10 @@ def get_parser():
                         type = int,
                         help = "Time to stream tweets",
                         default = 20)
+    parser.add_argument("--dir",
+                        dest = "directory",
+                        help = "directory to store stream")
+ 
     return parser
 
 class MyStreamListener(tweepy.StreamListener):
@@ -40,19 +44,20 @@ class MyStreamListener(tweepy.StreamListener):
     https://github.com/tweepy/tweepy/blob/master/tweepy/streaming.py
     """
 
-    def __init__(self, time_limit, start_time, term_list):
+    def __init__(self, time_limit, start_time, term_list, directory):
         """Initiate instance of tweet stream, setting timie_limit of the stream"""
         print("init") 
         self.time_limit = time_limit 
         self.start_time = start_time
-        self.term_list = "_".join(term_list)
+        self.directory = directory
+        #self.term_list = "_".join(term_list)
 
     def on_status(self, status):
         """Called when a new status arrives i.e., a new tweet that matches specified terms"""
 
         print("Saving...\n")
         
-        with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/streaming_{0}.jsonl".format(self.term_list),'a') as outfile:
+        with open("/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{}/streaming.jsonl".format(self.directory),'a') as outfile:
             outfile.write(json.dumps(status) + "\n")
 
         return True 
@@ -132,7 +137,7 @@ if __name__== '__main__':
     api = tweepy.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
     start_time = time.time()
 
-    twitter_scraper = MyStreamListener(time_limit = args.time, start_time = start_time, term_list = args.terms) # Create the instance and set the time_limit. 
+    twitter_scraper = MyStreamListener(time_limit = args.time, start_time = start_time, term_list = args.terms, directory = args.directory) # Create the instance and set the time_limit. 
     tweet_stream = tweepy.Stream(auth = api.auth, listener = twitter_scraper, tweet_mode= "extended")
     tweet_stream.filter(track=[",".join(args.terms)]) # Filter searches for all words in given list, and as args.terms is in a list, I have to unpack it first.
     tweet_stream.disconnect() #disconnect the stream and stop streaming

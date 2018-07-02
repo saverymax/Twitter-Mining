@@ -66,7 +66,7 @@ class process_tweet():
         # Now remove those np.nans
         #print(self.tweet_dataframe['filtered_text'].isnull().sum())
         self.tweet_dataframe = self.tweet_dataframe.dropna()
-
+        self.tweet_dataframe.reset_index(drop = False, inplace = True)
         # Remove all non-english words...
         # Gets rid of too much though I think 
         #words = set(nltk.corpus.words.words())

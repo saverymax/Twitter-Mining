@@ -31,12 +31,9 @@ def get_parser():
     """
 
     parser = argparse.ArgumentParser(description = "Modeling topics from twitter stream data") 
-    parser.add_argument("--path", 
-                        dest = "filename", 
-                        help = "The path to the file to be analyzed. Something like /home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/tweets_converted.tsv")
 
     parser.add_argument("--dir", 
-                        dest = "stream_dir", 
+                        dest = "directory", 
                         help = "The directory to save the figures.")
     
     parser.add_argument("--topics", 
@@ -52,19 +49,20 @@ class topic_modeling():
     Class that contains topic modeling and visualization methods.
     """
 
-    def __init__(self, dataframe, filename, stream_dir):
+    def __init__(self, directory, n_topics):
         """
         Initiate an instance.
         Must pass the whole dataframe, and individual columns to initiate. This is unnecessary, but to generate a legend, 
         the whole dataframe is required, and I only added the legend after the rest of the script had been written.
         """
 
-        self.dataframe = dataframe
-        self.filename = filename
-        self.stream_info = topic_modeling.split_filename(self)
-        self.stream_dir = stream_dir
+        dataframe = pd.read_csv('data/{}/filtered_tweets.tsv'.format(directory), sep = '\t')
 
-    def nmf_analysis(self, n_topics):
+        self.dataframe = dataframe
+        self.directory = directory
+        self.n_topics = n_topics
+
+    def nmf_analysis(self):
         """
         Vectorize and transform tweet data using the NMF algorithm, which takes a tfidf matrix as input. 
         Basic tutorial below:
@@ -78,7 +76,7 @@ class topic_modeling():
         # term frequency * inverse document frequency
         tfidf = tfidf_vectorizer.fit_transform(self.dataframe['filtered_text'])
         tfidf_feature_names = tfidf_vectorizer.get_feature_names()
-        nmf = NMF(n_components = n_topics, random_state = 0, alpha= .1, l1_ratio = .5).fit(tfidf)
+        nmf = NMF(n_components = self.n_topics, random_state = 0, alpha= .1, l1_ratio = .5).fit(tfidf)
         nmf_transform = nmf.transform(tfidf)
 
         topic_modeling.display_topics(self, nmf, tfidf_feature_names)
@@ -91,7 +89,7 @@ class topic_modeling():
 
         return nmf_transform, topics 
 
-    def lda_analysis(self, n_topics):
+    def lda_analysis(self):
         """ 
         Vectorize and transform tweet data using LDA. LDA can only use raw term counts for LDA because it is a probabilistic graphical model,
         and hence CountVectorizer is used. 
@@ -105,7 +103,7 @@ class topic_modeling():
         tf = tf_vectorizer.fit_transform(self.dataframe['filtered_text'])
         tf_feature_names = tf_vectorizer.get_feature_names()
        
-        lda = LatentDirichletAllocation(n_components = n_topics, max_iter = 5, learning_method = 'online', learning_offset = 50, random_state = 0).fit(tf)
+        lda = LatentDirichletAllocation(n_components = self.n_topics, max_iter = 5, learning_method = 'online', learning_offset = 50, random_state = 0).fit(tf)
         lda_transform = lda.transform(tf) 
         lda_keys = []
         for i in range(lda_transform.shape[0]):
@@ -149,7 +147,7 @@ class topic_modeling():
         #plt.show()
 
         fig.savefig(
-                    '/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}/model_word_frequencies_topic_{1}.png'.format(self.stream_dir, topic_n + 1)
+                    'data/{0}/model_word_frequencies_topic_{1}.png'.format(self.directory, topic_n + 1)
                     )
         plt.close()
         
@@ -189,6 +187,7 @@ class topic_modeling():
     def split_filename(self): 
         """
         Split the path given into a usable string for titles of figures and such
+        Don't need this method with the way ive got it set up.
         """
 
         drive, path = os.path.splitdrive(self.filename)
@@ -197,8 +196,7 @@ class topic_modeling():
 
         return filename
 
-
-    def visualize_mpl(self, n_topics, topics): 
+    def visualize_mpl(self, topics): 
         """
         Visualize dimensionally reduced data. A matplotlib plot is produced, as well as a interactive plotly plot with, after quite a hassle, a legend. 
         """
@@ -208,7 +206,7 @@ class topic_modeling():
         colors = plt.cm.nipy_spectral(np.linspace(0, 1, len(set(pd.Series(self.dataframe['labels'])))))
 
         fig, ax = plt.subplots(figsize = (20, 10))
-        ax.set_title('{0} topics, {1}'.format(n_topics, self.stream_info), fontsize = 20) 
+        ax.set_title('{0} topics'.format(self.n_topics), fontsize = 20) 
         
         for i, color in zip(range(len(topics)), colors):
             ax.scatter(
@@ -225,14 +223,13 @@ class topic_modeling():
         #plt.show()
         fig.savefig(
                     #'{0}/{1}/{2}_topics_{3}.png'.format(self.filename, self.stream_dir, self.stream_info, n_topics))
-                    'data/{0}/{1}_topics_{2}.png'.format(self.stream_dir, self.stream_info, n_topics), 
+                    'data/{0}/{1}_topic_model.png'.format(self.directory, self.n_topics), 
                     bbox_inches = 'tight'
                     )
 
         plt.close()
 
-
-    def visualize_plotly(self, n_topics, topics):
+    def visualize_plotly(self, topics):
         
         #py.sign_in(plotly_credentials.username,plotly_credentials.plotly_password)
 
@@ -293,17 +290,17 @@ class topic_modeling():
 
         fig = dict(data=plot_list, layout=layout)
         #plot_url = py.plot(fig)
-        offline_plot.plot(fig, filename='data/{0}/{1}_topic_model_reduced.html'.format(self.stream_dir, n_topics), auto_open = True)
+        offline_plot.plot(fig, filename='data/{0}/{1}_topic_model_reduced.html'.format(self.directory, self.n_topics), auto_open = True)
 
         #'/home/timor/Documents/Git/Twitter-Mining/streaming_tweets/data/{0}/{1}_topics_{2}.png'.format(self.stream_dir, self.stream_info, n_topics)
-    def save_dataframe(self, filename): 
+    def save_dataframe(self): 
         """
         Save the dataframe
         """
 
         print("Saving...")
         
-        self.dataframe.to_csv('data/cohen_reduced_dataframe_withtsne.tsv', sep='\t', index = False)
+        self.dataframe.to_csv('data/{}/reduced_dataframe_tsne_labels.tsv'.format(self.directory), sep='\t', index = False)
         #self.dataframe.to_csv('{}'.format(filename), sep='\t', index = False)
 
 
@@ -312,26 +309,23 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
     
-    tweet_dataframe = pd.read_csv(args.filename, sep = '\t')
 
     # Perform analysis with NMF or LDA. Would be nice to choose from command line.
-    n_topics = args.n_topics 
-
-    model = topic_modeling(tweet_dataframe, args.filename, args.stream_dir)
-    transformed_data_lda, topics = model.lda_analysis(n_topics)
+    model = topic_modeling(args.directory, args.n_topics)
+    transformed_data_lda, topics = model.lda_analysis()
 	
     # If I want to plot model with only tweets most likely to be in a topic:
     reduced_index = model.drop_tweets(transformed_data_lda) 
 
     model.run_tsne(transformed_data_lda[reduced_index]) 
 
-    # NMF. Not working with dropped tweets yet
+    # NMF. Not working with dropped tweets yet. Or reorganized pipeline
     #transformed_data_nmf, topics = model.nmf_analysis(n_topics)
     #model.run_tsne(transformed_data_nmf) 
     
-    # Only run if saving tsne data is necessary 
-    model.save_dataframe(args.filename)
+    # Run to save tsne data, labels, and reduced dataframe is necessary 
+    model.save_dataframe()
 
     # Visualization
-    model.visualize_mpl(n_topics, topics)
-    model.visualize_plotly(n_topics, topics)
+    model.visualize_mpl(topics)
+    model.visualize_plotly(topics)

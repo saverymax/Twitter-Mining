@@ -1,5 +1,9 @@
 Current work: 
 
+make sure representative tweet index is working right with reduced data frame. Compare without
+
+changed directory setup. Now, all files are named the same, but in aptly named directory
+
 topic model plot not working on site. something to do with saving it with plotly_tsne.py
 
 with fbiraid stuff, so many retweets that the topic model is basically just retweets
@@ -20,9 +24,10 @@ make sure nmf can drop tweets with low prob
 working on deciding how to handle retweets, extended text. If i get extended rt, I lose the RT in front of it which is nice to know that it's a retweet. right now I have a way to get full text for everything
 
 
-topic modeling:
 
 filtering:
+
+treat ' and . differently when stripping. replace with '' and ' '
 
 remove spanish, or at least spanish stopwords
 
